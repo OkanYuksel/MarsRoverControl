@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarsRoverControl.Models;
+using System;
 
 namespace MarsRoverControl
 {
@@ -7,6 +8,23 @@ namespace MarsRoverControl
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
+            RoverVehicle firstRover = new RoverVehicle(1,2,0);
+
+            Console.WriteLine(firstRover.TurnLeft());
+            Console.WriteLine(firstRover.TurnLeft());
+            Console.WriteLine(firstRover.TurnLeft());
+            Console.WriteLine(firstRover.TurnLeft());
+            Console.WriteLine(firstRover.TurnLeft());
+            Console.WriteLine(firstRover.TurnLeft());
+            Console.WriteLine(firstRover.TurnRight());
+            Console.WriteLine(firstRover.TurnRight());
+            Console.WriteLine(firstRover.TurnRight());
+            Console.WriteLine(firstRover.TurnRight());
+            Console.WriteLine(firstRover.TurnRight());
+            Console.WriteLine(firstRover.TurnRight());
+
+
         }
     }
 }
