@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "dnIbHDCeEUzoPo1pnxPFPVXFOqlRDgxa3T5HpYd3CphNnYBMv6H2LO+LFuED5KyeF7UPbHikjHAO3krsJ3DMOg==",
+  "dgSpecHash": "+YRyUqLKpbUG1NX4wRwtaiBdg9mSUfwIt/rBNOyZQcKatrpNIULhd9Ub8spVJzB+ncGsuhNIXmR07tyR8W29KA==",
   "success": true,
   "projectFilePath": "C:\\Users\\OKAN\\source\\repos\\MarsRoverControl\\MarsRoverControl\\MarsRoverControl.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\OKAN\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\5.0.1\\microsoft.extensions.dependencyinjection.5.0.1.nupkg.sha512",
+    "C:\\Users\\OKAN\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\5.0.0\\microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

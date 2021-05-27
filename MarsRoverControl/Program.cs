@@ -1,5 +1,8 @@
-﻿using MarsRoverControl.Service;
+﻿using MarsRoverControl.Interfaces;
+using MarsRoverControl.Service;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 
 namespace MarsRoverControl
 {
@@ -7,24 +10,58 @@ namespace MarsRoverControl
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            try
+            {
+                Console.WriteLine("Hello World!");
 
-            RoverVehicle firstRover = new RoverVehicle(1,2,0);
+                ServiceProvider serviceProvider = InjectionServiceProvider.Builder();
+                ISurface surface = serviceProvider.GetService<ISurface>();
 
-            Console.WriteLine(firstRover.TurnLeft());
-            Console.WriteLine(firstRover.TurnLeft());
-            Console.WriteLine(firstRover.TurnLeft());
-            Console.WriteLine(firstRover.TurnLeft());
-            Console.WriteLine(firstRover.TurnLeft());
-            Console.WriteLine(firstRover.TurnLeft());
-            Console.WriteLine(firstRover.TurnRight());
-            Console.WriteLine(firstRover.TurnRight());
-            Console.WriteLine(firstRover.TurnRight());
-            Console.WriteLine(firstRover.TurnRight());
-            Console.WriteLine(firstRover.TurnRight());
-            Console.WriteLine(firstRover.TurnRight());
+                surface.SurfaceBuilder(5, 5);
+
+                RoverVehicle firstRover = new RoverVehicle(1, 2, 0, surface);
+
+                RoverVehicle secondRover = new RoverVehicle(1, 3, 0, surface);
 
 
+                firstRover.SetSurfaceValue(3);
+                Console.WriteLine(firstRover.surface.SurfaceCode);
+                Console.WriteLine(secondRover.surface.SurfaceCode);
+
+                firstRover.SetSurfaceValue(5);
+                Console.WriteLine(firstRover.surface.SurfaceCode);
+                Console.WriteLine(secondRover.surface.SurfaceCode);
+
+                secondRover.SetSurfaceValue(7);
+                Console.WriteLine(firstRover.surface.SurfaceCode);
+                Console.WriteLine(secondRover.surface.SurfaceCode);
+
+                firstRover.SetSurfaceValue(2);
+                Console.WriteLine(firstRover.surface.SurfaceCode);
+                Console.WriteLine(secondRover.surface.SurfaceCode);
+
+                secondRover.SetSurfaceValue(4);
+                Console.WriteLine(firstRover.surface.SurfaceCode);
+                Console.WriteLine(secondRover.surface.SurfaceCode);
+
+                //Console.WriteLine(firstRover.TurnLeft());
+                //Console.WriteLine(firstRover.TurnLeft());
+                //Console.WriteLine(firstRover.TurnLeft());
+                //Console.WriteLine(firstRover.TurnLeft());
+                //Console.WriteLine(firstRover.TurnLeft());
+                //Console.WriteLine(firstRover.TurnLeft());
+                //Console.WriteLine(firstRover.TurnRight());
+                //Console.WriteLine(firstRover.TurnRight());
+                //Console.WriteLine(firstRover.TurnRight());
+                //Console.WriteLine(firstRover.TurnRight());
+                //Console.WriteLine(firstRover.TurnRight());
+                //Console.WriteLine(firstRover.TurnRight());
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
     }
 }

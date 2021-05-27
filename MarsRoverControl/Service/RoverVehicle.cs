@@ -2,6 +2,7 @@
 using MarsRoverControl.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MarsRoverControl.Service
@@ -11,12 +12,33 @@ namespace MarsRoverControl.Service
         private int locationOnTheXAxis { get; set; }
         private int locationOnTheYAxis { get; set; }
         private int vehicleDirectionState { get; set; }
+        public ISurface surface { get; set; }
 
-        public RoverVehicle(int _locationOnTheXAxis, int _locationOnTheYAxis, int _vehicleDirectionState)
+        public RoverVehicle(int _locationOnTheXAxis, int _locationOnTheYAxis, int _vehicleDirectionState, ISurface _surface)
         {
+            if (_surface == null)
+            {
+                // TODO yüzey alanı setlenmedi. Uyarı.
+            }
+
             locationOnTheXAxis = _locationOnTheXAxis;
             locationOnTheYAxis = _locationOnTheYAxis;
             vehicleDirectionState = _vehicleDirectionState;
+            surface = _surface;
+
+            SurfacePoint surfacePoint = surface.GetSurfacePoint(locationOnTheXAxis, locationOnTheYAxis);
+
+            if (surfacePoint == null)
+            {
+                // TODO yüzey alanı dışına çıkıldı uyarı.
+            }
+
+            if (surfacePoint.rover == null)
+            {
+                // TODO yüzey alanı dışına çıkıldı uyarı.
+            }
+
+            surfacePoint.PlaceVehicleToPoint(this);
         }
 
         public string TurnLeft()
@@ -58,6 +80,12 @@ namespace MarsRoverControl.Service
             return locationOnTheXAxis + " " + locationOnTheYAxis;
         }
 
+        public void SetSurfaceValue(int value)
+        {
+            surface.SurfaceCode = value;
+        }
+
+       
 
     }
 }
