@@ -25,24 +25,24 @@ namespace MarsRoverControl
 
 
                 firstRover.SetSurfaceValue(3);
-                Console.WriteLine(firstRover.surface.SurfaceCode);
-                Console.WriteLine(secondRover.surface.SurfaceCode);
+                Console.WriteLine(firstRover.surface.surfaceCode);
+                Console.WriteLine(secondRover.surface.surfaceCode);
 
                 firstRover.SetSurfaceValue(5);
-                Console.WriteLine(firstRover.surface.SurfaceCode);
-                Console.WriteLine(secondRover.surface.SurfaceCode);
+                Console.WriteLine(firstRover.surface.surfaceCode);
+                Console.WriteLine(secondRover.surface.surfaceCode);
 
                 secondRover.SetSurfaceValue(7);
-                Console.WriteLine(firstRover.surface.SurfaceCode);
-                Console.WriteLine(secondRover.surface.SurfaceCode);
+                Console.WriteLine(firstRover.surface.surfaceCode);
+                Console.WriteLine(secondRover.surface.surfaceCode);
 
                 firstRover.SetSurfaceValue(2);
-                Console.WriteLine(firstRover.surface.SurfaceCode);
-                Console.WriteLine(secondRover.surface.SurfaceCode);
+                Console.WriteLine(firstRover.surface.surfaceCode);
+                Console.WriteLine(secondRover.surface.surfaceCode);
 
                 secondRover.SetSurfaceValue(4);
-                Console.WriteLine(firstRover.surface.SurfaceCode);
-                Console.WriteLine(secondRover.surface.SurfaceCode);
+                Console.WriteLine(firstRover.surface.surfaceCode);
+                Console.WriteLine(secondRover.surface.surfaceCode);
 
                 //Console.WriteLine(firstRover.TurnLeft());
                 //Console.WriteLine(firstRover.TurnLeft());

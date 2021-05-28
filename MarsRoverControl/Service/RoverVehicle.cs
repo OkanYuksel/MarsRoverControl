@@ -82,7 +82,7 @@ namespace MarsRoverControl.Service
 
         public void SetSurfaceValue(int value)
         {
-            surface.SurfaceCode = value;
+            surface.surfaceCode = value;
         }
 
        

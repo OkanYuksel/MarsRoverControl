@@ -8,9 +8,9 @@ namespace MarsRoverControl.Service
 {
     public class Surface : ISurface
     {
-        public List<SurfacePoint> SurfacePointList { get; set; }
+        public List<SurfacePoint> surfacePointList { get; set; }
 
-        public int SurfaceCode { get; set; }
+        public int surfaceCode { get; set; }
 
         public void SurfaceBuilder(int _pointCountOnXAxis, int _pointCountOnYAxis)
         {
@@ -24,17 +24,17 @@ namespace MarsRoverControl.Service
                 }
             }
 
-            SurfacePointList = surfacePoints;
+            surfacePointList = surfacePoints;
         }
 
         public SurfacePoint GetSurfacePoint(int _locationOnTheXAxis, int _locationOnTheYAxis)
         {
-            if (this.SurfacePointList == null)
+            if (this.surfacePointList == null)
             {
                 return null;
             }
 
-            return this.SurfacePointList.Where(x => x.locationOnTheXAxis == _locationOnTheXAxis && x.locationOnTheYAxis == _locationOnTheYAxis).FirstOrDefault();
+            return this.surfacePointList.Where(x => x.locationOnTheXAxis == _locationOnTheXAxis && x.locationOnTheYAxis == _locationOnTheYAxis).FirstOrDefault();
         }
     }
 }
