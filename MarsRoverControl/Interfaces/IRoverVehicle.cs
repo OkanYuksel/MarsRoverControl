@@ -9,7 +9,6 @@ namespace MarsRoverControl.Interfaces
         public string TurnLeft();
         public string TurnRight();
         public string MoveForward();
-        public int GetDirectionCount();
         public string GetRoverPositionAndDirection();
         public string GetRoverPositionOnSurface();
     }

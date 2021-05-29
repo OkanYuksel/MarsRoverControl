@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "+YRyUqLKpbUG1NX4wRwtaiBdg9mSUfwIt/rBNOyZQcKatrpNIULhd9Ub8spVJzB+ncGsuhNIXmR07tyR8W29KA==",
+  "dgSpecHash": "BKhADGYmfPKOqwwcbNkVQWckp0EGZjQJQ/rP7QsheRftNprkX++8Mx4CPe70jTSCHm+V+GFt4dnTD0lNJmMDWg==",
   "success": true,
   "projectFilePath": "C:\\Users\\OKAN\\source\\repos\\MarsRoverControl\\MarsRoverControl\\MarsRoverControl.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\OKAN\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\5.0.1\\microsoft.extensions.dependencyinjection.5.0.1.nupkg.sha512",
-    "C:\\Users\\OKAN\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\5.0.0\\microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512"
+    "C:\\Users\\OKAN\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\5.0.0\\microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
+    "C:\\Users\\OKAN\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
   ],
   "logs": []
 }

@@ -1,5 +1,4 @@
-﻿using MarsRoverControl.Enums;
-using MarsRoverControl.Interfaces;
+﻿using MarsRoverControl.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +8,9 @@ namespace MarsRoverControl.Service
 {
     public class RoverVehicle : IRoverVehicle
     {
-        private int locationOnTheXAxis { get; set; }
-        private int locationOnTheYAxis { get; set; }
-        private int vehicleDirectionState { get; set; }
+        public VehiclePositionProperty vehiclePositionProperty { get; set; }
         public ISurface surface { get; set; }
+        public Guid roverId { get; set; }
 
         public RoverVehicle(int _locationOnTheXAxis, int _locationOnTheYAxis, int _vehicleDirectionState, ISurface _surface)
         {
@@ -21,71 +19,103 @@ namespace MarsRoverControl.Service
                 // TODO yüzey alanı setlenmedi. Uyarı.
             }
 
-            locationOnTheXAxis = _locationOnTheXAxis;
-            locationOnTheYAxis = _locationOnTheYAxis;
-            vehicleDirectionState = _vehicleDirectionState;
+            if (!_surface.VehicleMovePermissionControlForSurfacePoint(_locationOnTheXAxis, _locationOnTheYAxis, roverId))
+            {
+                // TODO belirtilen koordinatlar konumlanmak için uygun değil.
+            }
+
+            roverId = Guid.NewGuid();
+            vehiclePositionProperty = new VehiclePositionProperty();
+            vehiclePositionProperty.locationOnTheXAxis = _locationOnTheXAxis;
+            vehiclePositionProperty.locationOnTheYAxis = _locationOnTheYAxis;
+            vehiclePositionProperty.vehicleDirectionState = _vehicleDirectionState;
             surface = _surface;
 
-            SurfacePoint surfacePoint = surface.GetSurfacePoint(locationOnTheXAxis, locationOnTheYAxis);
-
-            if (surfacePoint == null)
+            SurfacePoint surfacePoint = surface.GetSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis);
+            if (surfacePoint != null)
             {
-                // TODO yüzey alanı dışına çıkıldı uyarı.
+                surfacePoint.PlaceVehicleToPoint(this);
             }
-
-            if (surfacePoint.rover == null)
-            {
-                // TODO yüzey alanı dışına çıkıldı uyarı.
-            }
-
-            surfacePoint.PlaceVehicleToPoint(this);
         }
 
         public string TurnLeft()
         {
-            if (vehicleDirectionState > 0)
+            if (vehiclePositionProperty.vehicleDirectionState > 0)
             {
-                vehicleDirectionState -= 1;
+                vehiclePositionProperty.vehicleDirectionState -= 1;
             }
             else
             {
-                vehicleDirectionState = GetDirectionCount() - 1;
+                vehiclePositionProperty.vehicleDirectionState = DirectionService.GetDirectionCount() - 1;
             }
             return GetRoverPositionAndDirection();
         }
 
         public string TurnRight()
         {
-            vehicleDirectionState = (vehicleDirectionState + 1) % GetDirectionCount();
+            vehiclePositionProperty.vehicleDirectionState = (vehiclePositionProperty.vehicleDirectionState + 1) % DirectionService.GetDirectionCount();
             return GetRoverPositionAndDirection();
         }
 
         public string MoveForward()
         {
-            return GetRoverPositionAndDirection();
-        }
+            if (vehiclePositionProperty != null)
+            {
+                switch (vehiclePositionProperty.vehicleDirectionState)
+                {
+                    case 0:
+                        Console.WriteLine("Durum 0");
+                        vehiclePositionProperty.locationOnTheYAxis += 1;
+                        break;
+                    case 1:
+                        Console.WriteLine("Durum 1");
+                        vehiclePositionProperty.locationOnTheXAxis += 1;
+                        break;
+                    case 2:
+                        Console.WriteLine("Durum 2");
+                        vehiclePositionProperty.locationOnTheYAxis -= 1;
+                        break;
+                    case 3:
+                        Console.WriteLine("Durum 3");
+                        vehiclePositionProperty.locationOnTheXAxis -= 1;
+                        break;
+                    default:
+                        Console.WriteLine("Geçersiz durum.");
+                        break;
+                }
+            }
 
-        public int GetDirectionCount()
-        {
-            return Enum.GetNames(typeof(RoverDirections)).Length;
+            return GetRoverPositionAndDirection();
         }
 
         public string GetRoverPositionAndDirection()
         {
-            return GetRoverPositionOnSurface() + " " + Enum.GetName(typeof(RoverDirections), vehicleDirectionState);
+            return GetRoverPositionOnSurface() + " " + Enum.GetName(typeof(DirectionService.RoverDirections), vehiclePositionProperty.vehicleDirectionState);
         }
 
         public string GetRoverPositionOnSurface()
         {
-            return locationOnTheXAxis + " " + locationOnTheYAxis;
+            return vehiclePositionProperty.locationOnTheXAxis + " " + vehiclePositionProperty.locationOnTheYAxis;
         }
 
-        public void SetSurfaceValue(int value)
+        public void RunCommands(List<char> commandList)
         {
-            surface.surfaceCode = value;
+            foreach (var command in commandList)
+            {
+                if (command.ToString() == "L")
+                {
+                    TurnLeft();
+                }
+                else if (command.ToString() == "R")
+                {
+                    TurnRight();
+                }
+                else if (command.ToString() == "M")
+                {
+                    MoveForward();
+                }
+            }
         }
-
-       
 
     }
 }
