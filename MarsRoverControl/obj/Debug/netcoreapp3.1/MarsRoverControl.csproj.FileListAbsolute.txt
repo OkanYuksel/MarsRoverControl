@@ -4,10 +4,12 @@ C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\bin\Debug\netcoreap
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\bin\Debug\netcoreapp3.1\MarsRoverControl.runtimeconfig.dev.json
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\bin\Debug\netcoreapp3.1\MarsRoverControl.dll
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\bin\Debug\netcoreapp3.1\MarsRoverControl.pdb
-C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Debug\netcoreapp3.1\MarsRoverControl.csprojAssemblyReference.cache
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Debug\netcoreapp3.1\MarsRoverControl.AssemblyInfoInputs.cache
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Debug\netcoreapp3.1\MarsRoverControl.AssemblyInfo.cs
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Debug\netcoreapp3.1\MarsRoverControl.csproj.CoreCompileInputs.cache
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Debug\netcoreapp3.1\MarsRoverControl.dll
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Debug\netcoreapp3.1\MarsRoverControl.pdb
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Debug\netcoreapp3.1\MarsRoverControl.genruntimeconfig.cache
+C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Debug\netcoreapp3.1\MarsRoverControl.csproj.CopyComplete
