@@ -1,11 +1,8 @@
 ﻿using MarsRoverControl.Consts;
 using MarsRoverControl.Interfaces;
 using MarsRoverControl.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MarsRoverControl.Service
 {
@@ -43,9 +40,16 @@ namespace MarsRoverControl.Service
             //}
         }
 
+        /// <summary>
+        /// It simulates the commands that comes as a parameter and checks for the problem.
+        /// </summary>
+        /// <param name="roverId"></param>
+        /// <param name="vehiclePositionProperty"></param>
+        /// <param name="commandList"></param>
+        /// <returns>CommandResult object</returns>
         public CommandResult SimulationForTheCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
         {
-            VehiclePositionProperty storeObject = Clone(vehiclePositionProperty);
+            VehiclePositionProperty storeObject = vehiclePositionProperty.Clone();
 
             bool isSimulationFinishedSuccesfully = true;
             foreach (var command in commandList)
@@ -98,18 +102,31 @@ namespace MarsRoverControl.Service
             };
         }
 
+        /// <summary>
+        /// If there is no problem with the simulated commands, it moves the vehicle to the specified coordinate.
+        /// </summary>
+        /// <param name="roverId"></param>
+        /// <param name="vehiclePositionProperty"></param>
+        /// <param name="commandList"></param>
+        /// <returns></returns>
         public CommandResult RunCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
         {
             CommandResult commandResult = SimulationForTheCommands(roverId, vehiclePositionProperty, commandList);
 
             if (commandResult.isCommandFinishedSuccessfully)
             {
+                //New coordinates setting to the rover vehicle.
                 RoverVehicle roverVehicle = surface.GetRoverWithId(roverId);
                 roverVehicle.vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
             }
             return commandResult;
         }
 
+        /// <summary>
+        /// This method sets the direction and returns the command result object as response. There is no need for control.
+        /// </summary>
+        /// <param name="vehiclePositionProperty"></param>
+        /// <returns>CommandResult object</returns>
         public CommandResult TurnLeft(VehiclePositionProperty vehiclePositionProperty)
         {
             if (vehiclePositionProperty.vehicleDirectionState > 0)
@@ -125,17 +142,29 @@ namespace MarsRoverControl.Service
             return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
         }
 
+        /// <summary>
+        /// This method sets the direction and returns the command result object as response. There is no need for control.
+        /// </summary>
+        /// <param name="vehiclePositionProperty"></param>
+        /// <returns>CommandResult object</returns>
         public CommandResult TurnRight(VehiclePositionProperty vehiclePositionProperty)
         {
             vehiclePositionProperty.vehicleDirectionState = (vehiclePositionProperty.vehicleDirectionState + 1) % DirectionService.GetDirectionCount();
             return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
         }
 
+        /// <summary>
+        /// This method developed to move the vehicle forward. This method must have some validation.
+        /// </summary>
+        /// <param name="roverId"></param>
+        /// <param name="vehiclePositionProperty"></param>
+        /// <returns>CommandResult object</returns>
         public CommandResult MoveForward(Guid roverId, VehiclePositionProperty vehiclePositionProperty)
         {
             bool isCommandFinishedSuccessfully = false;
             if (vehiclePositionProperty != null)
             {
+                //VehicleMovePermissionControlForSurfacePoint method should be run. Beceause it checks the suitability of the given point to move. For example surface size, any different vehicle..
                 switch (vehiclePositionProperty.vehicleDirectionState)
                 {
                     case 0:
@@ -173,12 +202,6 @@ namespace MarsRoverControl.Service
             }
 
             return new CommandResult { isCommandFinishedSuccessfully = isCommandFinishedSuccessfully, vehicleNewPositionProperty = vehiclePositionProperty };
-        }
-
-        public static T Clone<T>(T source)
-        {
-            var serialized = JsonConvert.SerializeObject(source);
-            return JsonConvert.DeserializeObject<T>(serialized);
         }
 
         public string GetRoverPositionAndDirection()

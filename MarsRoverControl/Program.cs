@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MarsRoverControl
 {
@@ -16,81 +15,71 @@ namespace MarsRoverControl
         {
             try
             {
+                // Program starting with start message. 
                 Console.WriteLine(Messages.START_MESSAGE);
 
+                //Asking surface size to user
                 SurfaceProperty surfaceProperty = InputManagerService.GetTheSurfaceSize();
 
+                //Generating singleton surface service with the parameters entered by the user. 
                 ServiceProvider serviceProvider = InjectionServiceProvider.Builder();
                 ISurface surface = serviceProvider.GetService<ISurface>();
 
                 surface.SurfaceBuilder(surfaceProperty.width, surfaceProperty.height);
 
                 //rover 1
-
+                //For definition the first rover vehicle, asking location and direction in the surface.
                 VehiclePositionProperty vehiclePositionProperty = InputManagerService.GetRoverDefinition();
 
-                RoverVehicle firstRover = new RoverVehicle(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis, vehiclePositionProperty.vehicleDirectionState, surface);
+                //rover building
+                RoverVehicle firstRover = new RoverVehicle(vehiclePositionProperty.locationOnTheXAxis,
+                    vehiclePositionProperty.locationOnTheYAxis,
+                    vehiclePositionProperty.vehicleDirectionState, surface);
 
-
+                //To move the rover, the user is prompted to enter commands
                 List<char> commands = InputManagerService.GetRoverCommands();
 
+                //Commands running
                 CommandResult commandResult = firstRover.RunCommands(firstRover.roverId, firstRover.vehiclePositionProperty, commands);
 
-                Console.WriteLine("commandResult rover 1   : " + JsonConvert.SerializeObject(commandResult));
-           
+                if (commandResult.isCommandFinishedSuccessfully)
+                {
+                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResult.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResult.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResult.vehicleNewPositionProperty.vehicleDirectionState));
+                }
+                else
+                {
+                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResult.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResult.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResult.vehicleNewPositionProperty.vehicleDirectionState));
+                }
+
                 /////////////////////
-                
+
 
                 //rover 2
-
+                //For definition the second rover vehicle, asking location and direction in the surface.
                 VehiclePositionProperty vehiclePositionProperty2 = InputManagerService.GetRoverDefinition();
 
-                RoverVehicle secondRover = new RoverVehicle(vehiclePositionProperty2.locationOnTheXAxis, vehiclePositionProperty2.locationOnTheYAxis, vehiclePositionProperty2.vehicleDirectionState, surface);
+                //rover building
+                RoverVehicle secondRover = new RoverVehicle(vehiclePositionProperty2.locationOnTheXAxis,
+                    vehiclePositionProperty2.locationOnTheYAxis,
+                    vehiclePositionProperty2.vehicleDirectionState, surface);
 
+                //To move the rover, the user is prompted to enter commands
                 List<char> commands2 = InputManagerService.GetRoverCommands();
 
+                //Commands running
                 CommandResult commandResult2 = secondRover.RunCommands(secondRover.roverId, secondRover.vehiclePositionProperty, commands2);
 
-
-                Console.WriteLine("commandResult rover 2   : " + JsonConvert.SerializeObject(commandResult2));
+                if (commandResult2.isCommandFinishedSuccessfully)
+                {
+                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResult2.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResult2.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResult2.vehicleNewPositionProperty.vehicleDirectionState));
+                }
+                else
+                {
+                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResult2.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResult2.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResult2.vehicleNewPositionProperty.vehicleDirectionState));
+                }
                 Console.ReadLine();
 
                 //////////////
-                ///
-
-
-                //firstRover.SetSurfaceValue(3);
-                //Console.WriteLine(firstRover.surface.surfaceCode);
-                //Console.WriteLine(secondRover.surface.surfaceCode);
-
-                //firstRover.SetSurfaceValue(5);
-                //Console.WriteLine(firstRover.surface.surfaceCode);
-                //Console.WriteLine(secondRover.surface.surfaceCode);
-
-                //secondRover.SetSurfaceValue(7);
-                //Console.WriteLine(firstRover.surface.surfaceCode);
-                //Console.WriteLine(secondRover.surface.surfaceCode);
-
-                //firstRover.SetSurfaceValue(2);
-                //Console.WriteLine(firstRover.surface.surfaceCode);
-                //Console.WriteLine(secondRover.surface.surfaceCode);
-
-                //secondRover.SetSurfaceValue(4);
-                //Console.WriteLine(firstRover.surface.surfaceCode);
-                //Console.WriteLine(secondRover.surface.surfaceCode);
-
-                //Console.WriteLine(firstRover.TurnLeft());
-                //Console.WriteLine(firstRover.TurnLeft());
-                //Console.WriteLine(firstRover.TurnLeft());
-                //Console.WriteLine(firstRover.TurnLeft());
-                //Console.WriteLine(firstRover.TurnLeft());
-                //Console.WriteLine(firstRover.TurnLeft());
-                //Console.WriteLine(firstRover.TurnRight());
-                //Console.WriteLine(firstRover.TurnRight());
-                //Console.WriteLine(firstRover.TurnRight());
-                //Console.WriteLine(firstRover.TurnRight());
-                //Console.WriteLine(firstRover.TurnRight());
-                //Console.WriteLine(firstRover.TurnRight());
 
             }
             catch (Exception ex)

@@ -1,11 +1,8 @@
 ﻿using MarsRoverControl.Consts;
 using MarsRoverControl.Interfaces;
-using MarsRoverControl.Models;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MarsRoverControl.Service
 {
@@ -18,6 +15,7 @@ namespace MarsRoverControl.Service
         {
             List<SurfacePoint> surfacePoints = new List<SurfacePoint>();
 
+            //Generating surface points. Like x y coordinate system
             for (var y = 0; y <= _pointCountOnYAxis; y += 1)
             {
                 for (var x = 0; x <= _pointCountOnXAxis; x += 1)
@@ -69,49 +67,12 @@ namespace MarsRoverControl.Service
                 anyRoverExistInThisPosition = (activeRoverListDifferentCurrentRover != null);
                 if (anyRoverExistInThisPosition)
                 {
-                    Console.WriteLine(Messages.DIFFERENT_VEHICLE_EXIST_ON_SURFACE_POINT + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
+                    Console.WriteLine(Messages.VEHICLE_CHECK_ON_SURFACE_POINT_MESSAGE + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
                 }
             }
 
             return !anyRoverExistInThisPosition;
         }
-
-
-
-        /// <summary>
-        /// Moves the rover to new location.
-        /// </summary>
-        /// <param name="roverId"></param>
-        /// <param name="vehiclePositionProperty"></param>
-        /// <returns></returns>
-        //public bool TransportVehicleToPoint(Guid roverId, VehiclePositionProperty vehiclePositionProperty)
-        //{
-        //    SurfacePoint currentSurfacePoint = GetRoverLocation(roverId);
-        //    bool isOldLocationRemoved = false;
-        //    bool newLocationBinded = false;
-        //    foreach (var surfacePoint in surfacePointList)
-        //    {
-        //        if (surfacePoint.locationOnTheXAxis == currentSurfacePoint.locationOnTheXAxis && surfacePoint.locationOnTheYAxis == currentSurfacePoint.locationOnTheYAxis)
-        //        {
-        //            surfacePoint.rover = null;
-        //            isOldLocationRemoved = true;
-        //        }
-        //        else if (surfacePoint.locationOnTheXAxis == vehiclePositionProperty.locationOnTheXAxis && surfacePoint.locationOnTheYAxis == vehiclePositionProperty.locationOnTheYAxis)
-        //        {
-        //            surfacePoint.rover = currentSurfacePoint.rover;
-        //            newLocationBinded = true;
-        //        }
-        //    }
-
-        //    if (isOldLocationRemoved && newLocationBinded)
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
 
         /// <summary>
         /// Finds the rover's current location.
@@ -132,18 +93,40 @@ namespace MarsRoverControl.Service
             return surfacePoint;
         }
 
-     
 
-
-        public void VehicleRegistrationToSurface(RoverVehicle roverVehicle)
+        /// <summary>
+        /// This mothod using for defining vehicle on the surface. In this method checks the vehicle has been registered before.
+        /// </summary>
+        /// <param name="roverVehicle"></param>
+        /// <returns>bool result</returns>
+        public bool VehicleRegistrationToSurface(RoverVehicle roverVehicle)
         {
+            bool isOperationCompletedSuccessfully = false;
             if (roverVehicleList == null)
             {
                 roverVehicleList = new List<RoverVehicle>();
             }
-            roverVehicleList.Add(roverVehicle);
+
+            if (roverVehicleList.Where(x => x.roverId == roverVehicle.roverId).FirstOrDefault() == null)
+            {
+                //rover can be registered.
+                roverVehicleList.Add(roverVehicle);
+                isOperationCompletedSuccessfully = true;
+                Console.WriteLine(Messages.ROVER_SUCCESSFULLY_REGISTERED_MESSAGE);
+            }
+            else
+            {
+                Console.WriteLine(Messages.ROVER_HAS_BEEN_REGISTERED_MESSAGE);
+            }
+
+            return isOperationCompletedSuccessfully;
         }
 
+        /// <summary>
+        ///  Finds the vehicle with roverId in roverVehicleList.
+        /// </summary>
+        /// <param name="roverId"></param>
+        /// <returns>RoverVehicle object</returns>
         public RoverVehicle GetRoverWithId(Guid roverId)
         {
             RoverVehicle roverVehicle = roverVehicleList.Where(x => x.roverId == roverId).FirstOrDefault();
