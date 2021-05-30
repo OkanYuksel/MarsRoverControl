@@ -29,21 +29,21 @@ namespace MarsRoverControl.Service
                 {
                     if (fields.Length == 2)
                     {
-                        int val;
-                        bool kontrol = int.TryParse(fields.First(), out val);
-                        if (kontrol)
+                        int xSizeValue;
+                        bool controlForXSize = int.TryParse(fields.First(), out xSizeValue);
+                        if (controlForXSize)
                         {
-                            xSize = val;
+                            xSize = xSizeValue;
                         }
 
-                        int val2;
-                        bool kontrol2 = int.TryParse(fields.Last(), out val2);
-                        if (kontrol2)
+                        int ySizeValue;
+                        bool controlForYSize = int.TryParse(fields.Last(), out ySizeValue);
+                        if (controlForYSize)
                         {
-                            ySize = val2;
+                            ySize = ySizeValue;
                         }
 
-                        if (kontrol && kontrol2)
+                        if (controlForXSize && controlForYSize)
                         {
                             enteringCompleted = true;
                         }
@@ -82,25 +82,25 @@ namespace MarsRoverControl.Service
                 {
                     if (fields.Length == 3)
                     {
-                        int val;
-                        bool kontrol = int.TryParse(fields.First(), out val);
-                        if (kontrol)
+                        int xPositionValue;
+                        bool controlForXPosition = int.TryParse(fields.First(), out xPositionValue);
+                        if (controlForXPosition)
                         {
-                            xPosition = val;
+                            xPosition = xPositionValue;
                         }
 
-                        int val2;
-                        bool kontrol2 = int.TryParse(fields[1], out val2);
-                        if (kontrol2)
+                        int yPositionValue;
+                        bool controlForYPosition = int.TryParse(fields[1], out yPositionValue);
+                        if (controlForYPosition)
                         {
-                            yPosition = val2;
+                            yPosition = yPositionValue;
                         }
 
-                        Char val3;
-                        bool kontrol3 = Char.TryParse(fields.Last(), out val3);
-                        if (kontrol3)
+                        Char directionValue;
+                        bool controlForDirection = Char.TryParse(fields.Last(), out directionValue);
+                        if (controlForDirection)
                         {
-                            int state = DirectionService.GetDirectionState(val3);
+                            int state = DirectionService.GetDirectionState(directionValue);
                             if (state > -1)
                             {
                                 directionState = state;
@@ -108,7 +108,7 @@ namespace MarsRoverControl.Service
                         }
 
 
-                        if (kontrol && kontrol2 && directionState > -1)
+                        if (controlForXPosition && controlForYPosition && directionState > -1)
                         {
                             enteringCompleted = true;
                         }
@@ -189,7 +189,6 @@ namespace MarsRoverControl.Service
                 if (command.ToString().ToUpper() == GetCommandName((int)commandTypeValue))
                 {
                     return true;
-
                 }
             }
             return false;
