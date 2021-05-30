@@ -8,23 +8,23 @@ namespace MarsRoverControl.Service
 {
     public class Surface : ISurface
     {
-        public List<Position> surfacePointList { get; set; }
-        public List<RoverVehicle> roverVehicleList { get; set; }
+        public List<Location> SurfacePointList { get; set; }
+        public List<RoverVehicle> RoverVehicleList { get; set; }
 
         public void SurfaceBuilder(int pointCountOnXAxis, int pointCountOnYAxis)
         {
-            List<Position> surfacePoints = new List<Position>();
+            List<Location> surfacePoints = new List<Location>();
 
             //Generating surface points. Like x y coordinate system
             for (var y = 0; y <= pointCountOnYAxis; y++)
             {
                 for (var x = 0; x <= pointCountOnXAxis; x++)
                 {
-                    surfacePoints.Add(new Position(x, y));
+                    surfacePoints.Add(new Location(x, y));
                 }
             }
 
-            surfacePointList = surfacePoints;
+            SurfacePointList = surfacePoints;
         }
 
         /// <summary>
@@ -32,15 +32,15 @@ namespace MarsRoverControl.Service
         /// </summary>
         /// <param name="locationOnTheXAxis"></param>
         /// <param name="locationOnTheYAxis"></param>
-        /// <returns>SurfacePoint object</returns>
-        public Position GetSurfacePoint(int locationOnTheXAxis, int locationOnTheYAxis)
+        /// <returns>Location object</returns>
+        public Location GetLocation(int locationOnTheXAxis, int locationOnTheYAxis)
         {
-            if (this.surfacePointList == null)
+            if (SurfacePointList == null)
             {
                 return null;
             }
 
-            return this.surfacePointList.Where(sp => sp.X == locationOnTheXAxis && sp.Y == locationOnTheYAxis).FirstOrDefault();
+            return SurfacePointList.Where(sp => sp.X == locationOnTheXAxis && sp.Y == locationOnTheYAxis).FirstOrDefault();
         }
 
         /// <summary>
@@ -50,9 +50,9 @@ namespace MarsRoverControl.Service
         /// <param name="locationOnTheYAxis"></param>
         /// /// <param name="roverId"></param>
         /// <returns>bool result</returns>
-        public bool VehicleMovePermissionControlForSurfacePoint(int locationOnTheXAxis, int locationOnTheYAxis, Guid roverId)
+        public bool VehicleMovePermissionControlForLocation(int locationOnTheXAxis, int locationOnTheYAxis, Guid roverId)
         {
-            if (GetSurfacePoint(locationOnTheXAxis, locationOnTheYAxis) == null)
+            if (GetLocation(locationOnTheXAxis, locationOnTheYAxis) == null)
             {
                 Console.WriteLine(Messages.OutsideSurfaceAreaMessage + " x : " + locationOnTheXAxis + " y : " + locationOnTheYAxis);
                 return false;
@@ -60,10 +60,10 @@ namespace MarsRoverControl.Service
 
             bool anyRoverExistInThisPosition = false;
 
-            if (roverVehicleList != null)
+            if (RoverVehicleList != null)
             {
-                RoverVehicle activeRoverListDifferentCurrentRover = roverVehicleList.Where(x => x.roverId != roverId && x.vehiclePositionProperty.PositionOnSurface.X == locationOnTheXAxis
-                && x.vehiclePositionProperty.PositionOnSurface.Y == locationOnTheYAxis).FirstOrDefault();
+                RoverVehicle activeRoverListDifferentCurrentRover = RoverVehicleList.Where(x => x.RoverId != roverId && x.Position.Location.X == locationOnTheXAxis
+                && x.Position.Location.Y == locationOnTheYAxis).FirstOrDefault();
 
                 anyRoverExistInThisPosition = (activeRoverListDifferentCurrentRover != null);
                 if (anyRoverExistInThisPosition)
@@ -80,18 +80,18 @@ namespace MarsRoverControl.Service
         /// </summary>
         /// <param name="roverId"></param>
         /// <returns>SurfacePoint object</returns>
-        public Position GetRoverLocation(Guid roverId)
+        public Location GetRoverLocation(Guid roverId)
         {
-            Position surfacePoint = null;
-            if (roverVehicleList != null)
+            Location location = null;
+            if (RoverVehicleList != null)
             {
                 RoverVehicle roverVehicle = GetRoverWithId(roverId);
                 if (roverVehicle != null)
                 {
-                    surfacePoint = GetSurfacePoint(roverVehicle.vehiclePositionProperty.PositionOnSurface.X, roverVehicle.vehiclePositionProperty.PositionOnSurface.Y);
+                    location = GetLocation(roverVehicle.Position.Location.X, roverVehicle.Position.Location.Y);
                 }
             }
-            return surfacePoint;
+            return location;
         }
 
         /// <summary>
@@ -102,15 +102,15 @@ namespace MarsRoverControl.Service
         public bool VehicleRegistrationToSurface(RoverVehicle roverVehicle)
         {
             bool isOperationCompletedSuccessfully = false;
-            if (roverVehicleList == null)
+            if (RoverVehicleList == null)
             {
-                roverVehicleList = new List<RoverVehicle>();
+                RoverVehicleList = new List<RoverVehicle>();
             }
 
-            if (GetRoverWithId(roverVehicle.roverId) == null)
+            if (GetRoverWithId(roverVehicle.RoverId) == null)
             {
                 //rover can be registered.
-                roverVehicleList.Add(roverVehicle);
+                RoverVehicleList.Add(roverVehicle);
                 isOperationCompletedSuccessfully = true;
                 Console.WriteLine(Messages.RoverSuccessfullyRegisteredMessage);
             }
@@ -129,11 +129,11 @@ namespace MarsRoverControl.Service
         /// <returns>RoverVehicle object</returns>
         public RoverVehicle GetRoverWithId(Guid roverId)
         {
-            if (roverVehicleList == null)
+            if (RoverVehicleList == null)
             {
                 return null;
             }
-            RoverVehicle roverVehicle = roverVehicleList.Where(x => x.roverId == roverId).FirstOrDefault();
+            RoverVehicle roverVehicle = RoverVehicleList.Where(x => x.RoverId == roverId).FirstOrDefault();
             return roverVehicle;
         }
     }

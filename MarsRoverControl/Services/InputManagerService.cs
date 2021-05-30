@@ -22,7 +22,7 @@ namespace MarsRoverControl.Service
             do
             {
                 string line = Console.ReadLine();
-                string[] fields = line.Split(" ");
+                string[] fields = line.Trim().Split(" ");
 
                 if (fields != null)
                 {
@@ -82,7 +82,7 @@ namespace MarsRoverControl.Service
             do
             {
                 string line = Console.ReadLine();
-                string[] fields = line.Split(" ");
+                string[] fields = line.Trim().Split(" ");
 
                 if (fields != null)
                 {
@@ -128,7 +128,7 @@ namespace MarsRoverControl.Service
 
             } while (enteringCompleted == false);
 
-            return new VehiclePositionProperty { PositionOnSurface = new Position (xPosition, yPosition), VehicleDirectionState = directionState };
+            return new VehiclePositionProperty { Location = new Location (xPosition, yPosition), VehicleDirection = EnumerationHelper<Direction>.GetEnumObjectByValue(directionState) };
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace MarsRoverControl.Service
             do
             {
                 string line = Console.ReadLine();
-                char[] fields = line.ToUpper().ToArray();
+                char[] fields = line.Trim().ToUpper().ToArray();
 
                 if (fields != null)
                 {
