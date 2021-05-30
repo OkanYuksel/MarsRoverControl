@@ -33,7 +33,7 @@ namespace MarsRoverControl
                 {
                     List<char> commands = InputManagerService.GetRoverCommands();
 
-                    CommandResult simulationResult = surface.SimulationForTheCommands(firstRover.roverId, firstRover.vehiclePositionProperty, commands);
+                    CommandResult simulationResult = surface.RunCommands(firstRover.roverId, firstRover.vehiclePositionProperty, commands);
 
                     Console.WriteLine("SimulationForTheCommands : " + JsonConvert.SerializeObject(simulationResult));
                     Console.ReadLine();

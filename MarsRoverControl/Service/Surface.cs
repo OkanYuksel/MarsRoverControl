@@ -132,6 +132,62 @@ namespace MarsRoverControl.Service
             };
         }
 
+        public CommandResult RunCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
+        {
+            CommandResult commandResult = SimulationForTheCommands(roverId, vehiclePositionProperty, commandList);
+
+            if (commandResult.isCommandFinishedSuccessfully)
+            {
+                TransportVehicleToPoint(roverId, commandResult.vehicleNewPositionProperty);
+            }
+            return commandResult;
+        }
+
+        /// <summary>
+        /// Moves the rover to new location.
+        /// </summary>
+        /// <param name="roverId"></param>
+        /// <param name="vehiclePositionProperty"></param>
+        /// <returns></returns>
+        public bool TransportVehicleToPoint(Guid roverId, VehiclePositionProperty vehiclePositionProperty)
+        {
+            SurfacePoint currentSurfacePoint = GetRoverLocation(roverId);
+            bool isOldLocationRemoved = false;
+            bool newLocationBinded = false;
+            foreach (var surfacePoint in surfacePointList)
+            {
+                if (surfacePoint.locationOnTheXAxis == currentSurfacePoint.locationOnTheXAxis && surfacePoint.locationOnTheYAxis == currentSurfacePoint.locationOnTheYAxis)
+                {
+                    surfacePoint.rover = null;
+                    isOldLocationRemoved = true;
+                }
+                else if (surfacePoint.locationOnTheXAxis == vehiclePositionProperty.locationOnTheXAxis && surfacePoint.locationOnTheYAxis == vehiclePositionProperty.locationOnTheYAxis)
+                {
+                    surfacePoint.rover = currentSurfacePoint.rover;
+                    newLocationBinded = true;
+                }
+            }
+
+            if (isOldLocationRemoved && newLocationBinded)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Finds the rover's current location.
+        /// </summary>
+        /// <param name="roverId"></param>
+        /// <returns>SurfacePoint object</returns>
+        public SurfacePoint GetRoverLocation(Guid roverId)
+        {
+            return this.surfacePointList.Where(x => x.rover != null && x.rover.roverId == roverId).FirstOrDefault();
+        }
+
         public static T Clone<T>(T source)
         {
             var serialized = JsonConvert.SerializeObject(source);
