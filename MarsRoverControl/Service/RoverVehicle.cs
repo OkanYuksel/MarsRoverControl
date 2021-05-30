@@ -19,23 +19,25 @@ namespace MarsRoverControl.Service
                 // TODO yüzey alanı setlenmedi. Uyarı.
             }
 
+            roverId = Guid.NewGuid();
+
             if (!_surface.VehicleMovePermissionControlForSurfacePoint(_locationOnTheXAxis, _locationOnTheYAxis, roverId))
             {
                 // TODO belirtilen koordinatlar konumlanmak için uygun değil.
             }
 
-            roverId = Guid.NewGuid();
             vehiclePositionProperty = new VehiclePositionProperty();
             vehiclePositionProperty.locationOnTheXAxis = _locationOnTheXAxis;
             vehiclePositionProperty.locationOnTheYAxis = _locationOnTheYAxis;
             vehiclePositionProperty.vehicleDirectionState = _vehicleDirectionState;
             surface = _surface;
+            surface.VehicleRegistrationToSurface(this);
 
-            SurfacePoint surfacePoint = surface.GetSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis);
-            if (surfacePoint != null)
-            {
-                surfacePoint.PlaceVehicleToPoint(this);
-            }
+            //SurfacePoint surfacePoint = surface.GetSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis);
+            //if (surfacePoint != null)
+            //{
+            //    surfacePoint.PlaceVehicleToPoint(this);
+            //}
         }
 
         public string TurnLeft()

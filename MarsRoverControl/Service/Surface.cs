@@ -11,6 +11,7 @@ namespace MarsRoverControl.Service
     public class Surface : ISurface
     {
         public List<SurfacePoint> surfacePointList { get; set; }
+        public List<RoverVehicle> roverVehicleList { get; set; }
 
         public void SurfaceBuilder(int _pointCountOnXAxis, int _pointCountOnYAxis)
         {
@@ -51,30 +52,23 @@ namespace MarsRoverControl.Service
         /// <returns>bool result</returns>
         public bool VehicleMovePermissionControlForSurfacePoint(int _locationOnTheXAxis, int _locationOnTheYAxis, Guid _roverId)
         {
-            SurfacePoint surfacePoint = GetSurfacePoint(_locationOnTheXAxis, _locationOnTheYAxis);
-            if (surfacePoint == null)
+            if (GetSurfacePoint(_locationOnTheXAxis, _locationOnTheYAxis) == null)
             {
                 Console.WriteLine("Gitmek istediğin koordinat yüzey alanının dışında. x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
                 return false;
             }
 
-            if (surfacePoint.rover != null)
+            bool anyRoverExistInThisPosition = false;
+
+            if (roverVehicleList != null)
             {
-                if (surfacePoint.rover.roverId == _roverId)
-                {
-                    return true;
-                }
-                else
-                {
-                    Console.WriteLine("Gitmek istediğin lokasyonda başka bir rover aracı var. İlerleyemezsin. x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
-                    return false;
-                }
-            }
-            else
-            {
-                return true;
+                RoverVehicle activeRoverListDifferentCurrentRover = roverVehicleList.Where(x => x.roverId != _roverId && x.vehiclePositionProperty.locationOnTheXAxis == _locationOnTheXAxis
+                && x.vehiclePositionProperty.locationOnTheYAxis == _locationOnTheYAxis).FirstOrDefault();
+
+                anyRoverExistInThisPosition = (activeRoverListDifferentCurrentRover != null);
             }
 
+            return !anyRoverExistInThisPosition;
         }
 
         public CommandResult SimulationForTheCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
@@ -138,7 +132,8 @@ namespace MarsRoverControl.Service
 
             if (commandResult.isCommandFinishedSuccessfully)
             {
-                TransportVehicleToPoint(roverId, commandResult.vehicleNewPositionProperty);
+                RoverVehicle roverVehicle = GetRoverWithId(roverId);
+                roverVehicle.vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
             }
             return commandResult;
         }
@@ -149,34 +144,34 @@ namespace MarsRoverControl.Service
         /// <param name="roverId"></param>
         /// <param name="vehiclePositionProperty"></param>
         /// <returns></returns>
-        public bool TransportVehicleToPoint(Guid roverId, VehiclePositionProperty vehiclePositionProperty)
-        {
-            SurfacePoint currentSurfacePoint = GetRoverLocation(roverId);
-            bool isOldLocationRemoved = false;
-            bool newLocationBinded = false;
-            foreach (var surfacePoint in surfacePointList)
-            {
-                if (surfacePoint.locationOnTheXAxis == currentSurfacePoint.locationOnTheXAxis && surfacePoint.locationOnTheYAxis == currentSurfacePoint.locationOnTheYAxis)
-                {
-                    surfacePoint.rover = null;
-                    isOldLocationRemoved = true;
-                }
-                else if (surfacePoint.locationOnTheXAxis == vehiclePositionProperty.locationOnTheXAxis && surfacePoint.locationOnTheYAxis == vehiclePositionProperty.locationOnTheYAxis)
-                {
-                    surfacePoint.rover = currentSurfacePoint.rover;
-                    newLocationBinded = true;
-                }
-            }
+        //public bool TransportVehicleToPoint(Guid roverId, VehiclePositionProperty vehiclePositionProperty)
+        //{
+        //    SurfacePoint currentSurfacePoint = GetRoverLocation(roverId);
+        //    bool isOldLocationRemoved = false;
+        //    bool newLocationBinded = false;
+        //    foreach (var surfacePoint in surfacePointList)
+        //    {
+        //        if (surfacePoint.locationOnTheXAxis == currentSurfacePoint.locationOnTheXAxis && surfacePoint.locationOnTheYAxis == currentSurfacePoint.locationOnTheYAxis)
+        //        {
+        //            surfacePoint.rover = null;
+        //            isOldLocationRemoved = true;
+        //        }
+        //        else if (surfacePoint.locationOnTheXAxis == vehiclePositionProperty.locationOnTheXAxis && surfacePoint.locationOnTheYAxis == vehiclePositionProperty.locationOnTheYAxis)
+        //        {
+        //            surfacePoint.rover = currentSurfacePoint.rover;
+        //            newLocationBinded = true;
+        //        }
+        //    }
 
-            if (isOldLocationRemoved && newLocationBinded)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        //    if (isOldLocationRemoved && newLocationBinded)
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
 
         /// <summary>
         /// Finds the rover's current location.
@@ -185,7 +180,16 @@ namespace MarsRoverControl.Service
         /// <returns>SurfacePoint object</returns>
         public SurfacePoint GetRoverLocation(Guid roverId)
         {
-            return this.surfacePointList.Where(x => x.rover != null && x.rover.roverId == roverId).FirstOrDefault();
+            SurfacePoint surfacePoint = null;
+            if (roverVehicleList != null)
+            {
+                RoverVehicle roverVehicle = GetRoverWithId(roverId);
+                if (roverVehicle != null)
+                {
+                    surfacePoint = GetSurfacePoint(roverVehicle.vehiclePositionProperty.locationOnTheXAxis, roverVehicle.vehiclePositionProperty.locationOnTheYAxis);
+                }
+            }
+            return surfacePoint;
         }
 
         public static T Clone<T>(T source)
@@ -275,6 +279,21 @@ namespace MarsRoverControl.Service
             }
 
             return new CommandResult { isCommandFinishedSuccessfully = isCommandFinishedSuccessfully, vehicleNewPositionProperty = vehiclePositionProperty };
+        }
+
+        public void VehicleRegistrationToSurface(RoverVehicle roverVehicle)
+        {
+            if (roverVehicleList == null)
+            {
+                roverVehicleList = new List<RoverVehicle>();
+            }
+            roverVehicleList.Add(roverVehicle);
+        }
+
+        public RoverVehicle GetRoverWithId(Guid roverId)
+        {
+            RoverVehicle roverVehicle = roverVehicleList.Where(x => x.roverId == roverId).FirstOrDefault();
+            return roverVehicle;
         }
     }
 }

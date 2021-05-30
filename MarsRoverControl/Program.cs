@@ -25,33 +25,38 @@ namespace MarsRoverControl
 
                 surface.SurfaceBuilder(surfaceProperty.width, surfaceProperty.height);
 
+                //rover 1
+
                 VehiclePositionProperty vehiclePositionProperty = InputManagerService.GetRoverDefinition();
 
                 RoverVehicle firstRover = new RoverVehicle(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis, vehiclePositionProperty.vehicleDirectionState, surface);
 
-                do
-                {
-                    List<char> commands = InputManagerService.GetRoverCommands();
 
-                    CommandResult simulationResult = surface.RunCommands(firstRover.roverId, firstRover.vehiclePositionProperty, commands);
+                List<char> commands = InputManagerService.GetRoverCommands();
 
-                    Console.WriteLine("SimulationForTheCommands : " + JsonConvert.SerializeObject(simulationResult));
-                    Console.ReadLine();
+                CommandResult commandResult = surface.RunCommands(firstRover.roverId, firstRover.vehiclePositionProperty, commands);
 
-                } while (true);
+                Console.WriteLine("commandResult rover 1   : " + JsonConvert.SerializeObject(commandResult));
+           
+                /////////////////////
+                
+
+                //rover 2
+
+                VehiclePositionProperty vehiclePositionProperty2 = InputManagerService.GetRoverDefinition();
+
+                RoverVehicle secondRover = new RoverVehicle(vehiclePositionProperty2.locationOnTheXAxis, vehiclePositionProperty2.locationOnTheYAxis, vehiclePositionProperty2.vehicleDirectionState, surface);
+
+                List<char> commands2 = InputManagerService.GetRoverCommands();
+
+                CommandResult commandResult2 = surface.RunCommands(secondRover.roverId, secondRover.vehiclePositionProperty, commands2);
 
 
+                Console.WriteLine("commandResult rover 2   : " + JsonConvert.SerializeObject(commandResult2));
+                Console.ReadLine();
 
-                //firstRover.RunCommands(commands);
-
-                //VehiclePositionProperty vehiclePositionProperty2 = InputManagerService.GetRoverDefinition();
-
-                //RoverVehicle secondRover = new RoverVehicle(vehiclePositionProperty2.locationOnTheXAxis, vehiclePositionProperty2.locationOnTheYAxis, vehiclePositionProperty2.vehicleDirectionState, surface);
-
-                //List<char> commands2 = InputManagerService.GetRoverCommands();
-
-                //secondRover.RunCommands(commands2);
-
+                //////////////
+                ///
 
 
                 //firstRover.SetSurfaceValue(3);
