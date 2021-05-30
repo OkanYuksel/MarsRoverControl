@@ -6,6 +6,6 @@ namespace MarsRoverControl.Consts
 {
     public static class Settings
     {
-        public const int howManyRoverWillResearch = 2;
+        public const int HowManyRoverWillResearch = 2;
     }
 }

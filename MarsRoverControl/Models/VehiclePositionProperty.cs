@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MarsRoverControl.Enums;
 
 namespace MarsRoverControl.Service
 {
    public class VehiclePositionProperty
     {
-        public int locationOnTheXAxis { get; set; }
-        public int locationOnTheYAxis { get; set; }
-        public int vehicleDirectionState { get; set; }
+        public Location Location { get; set; }
+        public Direction VehicleDirection { get; set; }
 
         public VehiclePositionProperty Clone()
         {

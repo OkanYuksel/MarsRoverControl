@@ -68,4 +68,8 @@ public static class EnumerationHelper<T>
         return directionState;
     }
 
+    public static T GetEnumObjectByValue(int valueId)
+    {
+        return (T)Enum.ToObject(typeof(T), valueId);
+    }
 }

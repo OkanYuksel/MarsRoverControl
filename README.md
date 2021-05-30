@@ -1,4 +1,9 @@
-# MarsRoverControl
+# MarsRoverControl Project
+
+This project developed with **.Net Core**.  And then, includes **dependency injection** implementation.
+It also contains generic extension methods.
+
+#   Application Guideline
 
 Application could be start with .exe(MarsRoverControl/MarsRoverControl/bin/Release/netcoreapp3.1/MarsRoverControl.exe)
 
@@ -12,4 +17,4 @@ First rover will be positioned on the surface. You must enter the coordinates an
 
 The application will prompt you for a command to move the first vehicle. (You must enter commands without any spaces between them. You can use these commands:L,R,M. For example:MLRLRMLR)
 
-Enjoy! Have a good time.
+**Enjoy! Have a good time.**

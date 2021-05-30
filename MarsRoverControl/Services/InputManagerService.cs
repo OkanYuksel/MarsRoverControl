@@ -12,7 +12,7 @@ namespace MarsRoverControl.Service
         /// Gets the width & height parameters to create surface from the user. And then doing validation for the parameters.
         /// </summary>
         /// <returns>SurfaceProperty object</returns>
-        public static SurfaceProperty GetTheSurfaceSize()
+        public static SurfaceSizeProperty GetTheSurfaceSize()
         {
             int xSize = 0;
             int ySize = 0;
@@ -22,7 +22,7 @@ namespace MarsRoverControl.Service
             do
             {
                 string line = Console.ReadLine();
-                string[] fields = line.Split(" ");
+                string[] fields = line.Trim().Split(" ");
 
                 if (fields != null)
                 {
@@ -50,7 +50,7 @@ namespace MarsRoverControl.Service
                             }
                             else
                             {
-                                Console.WriteLine(Messages.INVALID_SURFACE_WIDTH_PARAMETERS_MESSAGE);
+                                Console.WriteLine(Messages.InvalidSurfaceWidthParametersMessage);
                             }
                         }
                     }
@@ -58,12 +58,12 @@ namespace MarsRoverControl.Service
 
                 if (enteringCompleted == false)
                 {
-                    Console.WriteLine(Messages.INCORRECT_INPUT_MESSAGE);
+                    Console.WriteLine(Messages.IncorrectInputMessage);
                 }
 
             } while (enteringCompleted == false);
 
-            return new SurfaceProperty { width = xSize, height = ySize };
+            return new SurfaceSizeProperty { Width = xSize, Height = ySize };
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace MarsRoverControl.Service
         /// <returns>VehiclePositionProperty object</returns>
         public static VehiclePositionProperty GetRoverDefinition()
         {
-            Console.WriteLine(Messages.ENTER_ROVER_POSITION_MESSAGE);
+            Console.WriteLine(Messages.EnterRoverPositionMesage);
             int xPosition = 0;
             int yPosition = 0;
             int directionState = -1;
@@ -82,7 +82,7 @@ namespace MarsRoverControl.Service
             do
             {
                 string line = Console.ReadLine();
-                string[] fields = line.Split(" ");
+                string[] fields = line.Trim().Split(" ");
 
                 if (fields != null)
                 {
@@ -106,7 +106,7 @@ namespace MarsRoverControl.Service
                         bool controlForDirection = Char.TryParse(fields.Last(), out directionValue);
                         if (controlForDirection)
                         {
-                            int value = EnumerationHelper<RoverDirections>.GetEnumItemValue(directionValue);
+                            int value = EnumerationHelper<Direction>.GetEnumItemValue(directionValue);
                             if (value > -1)
                             {
                                 directionState = value;
@@ -123,12 +123,12 @@ namespace MarsRoverControl.Service
 
                 if (enteringCompleted == false)
                 {
-                    Console.WriteLine(Messages.INCORRECT_INPUT_MESSAGE);
+                    Console.WriteLine(Messages.IncorrectInputMessage);
                 }
 
             } while (enteringCompleted == false);
 
-            return new VehiclePositionProperty { locationOnTheXAxis = xPosition, locationOnTheYAxis = yPosition, vehicleDirectionState = directionState };
+            return new VehiclePositionProperty { Location = new Location (xPosition, yPosition), VehicleDirection = EnumerationHelper<Direction>.GetEnumObjectByValue(directionState) };
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace MarsRoverControl.Service
         /// <returns>Command character list</returns>
         public static List<char> GetRoverCommands()
         {
-            Console.WriteLine(Messages.ENTER_MOVEMENT_COMMANDS_MESSAGE);
+            Console.WriteLine(Messages.EnterMovementCommandsMessage);
 
             List<char> commandList = new List<char>();
 
@@ -147,7 +147,7 @@ namespace MarsRoverControl.Service
             do
             {
                 string line = Console.ReadLine();
-                char[] fields = line.ToUpper().ToArray();
+                char[] fields = line.Trim().ToUpper().ToArray();
 
                 if (fields != null)
                 {
@@ -156,7 +156,7 @@ namespace MarsRoverControl.Service
                         bool isHasNonValidChar = false;
                         foreach (char command in fields)
                         {
-                            if (EnumerationHelper<Commands>.EnumValidationWithChar(command))
+                            if (EnumerationHelper<Command>.EnumValidationWithChar(command))
                             {
                                 commandList.Add(command);
                             }
@@ -175,7 +175,7 @@ namespace MarsRoverControl.Service
 
                 if (enteringCompleted == false)
                 {
-                    Console.WriteLine(Messages.INCORRECT_INPUT_MESSAGE);
+                    Console.WriteLine(Messages.IncorrectInputMessage);
                 }
 
             } while (enteringCompleted == false);
