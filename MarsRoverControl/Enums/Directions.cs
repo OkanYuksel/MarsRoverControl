@@ -4,5 +4,5 @@ using System.Text;
 
 namespace MarsRoverControl.Enums
 {
-    public enum Directions { N, E, S, W };
+    public enum Direction { N, E, S, W };
 }

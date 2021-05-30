@@ -8,10 +8,9 @@ namespace MarsRoverControl.Interfaces
 {
     public interface ISurface
     {
-        List<SurfacePoint> surfacePointList { get; set; }
-        void SurfaceBuilder(int _pointCountOnXAxis, int _pointCountOnYAxis);
-        SurfacePoint GetSurfacePoint(int _locationOnTheXAxis, int _locationOnTheYAxis);
-        bool VehicleMovePermissionControlForSurfacePoint(int _locationOnTheXAxis, int _locationOnTheYAxis, Guid _roverId);
+        void SurfaceBuilder(int pointCountOnXAxis, int pointCountOnYAxis);
+        SurfacePoint GetSurfacePoint(int locationOnTheXAxis, int locationOnTheYAxis);
+        bool VehicleMovePermissionControlForSurfacePoint(int locationOnTheXAxis, int locationOnTheYAxis, Guid roverId);
         SurfacePoint GetRoverLocation(Guid roverId);
         bool VehicleRegistrationToSurface(RoverVehicle roverVehicle);
         RoverVehicle GetRoverWithId(Guid roverId);

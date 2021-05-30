@@ -12,7 +12,7 @@ namespace MarsRoverControl.Service
         /// Gets the width & height parameters to create surface from the user. And then doing validation for the parameters.
         /// </summary>
         /// <returns>SurfaceProperty object</returns>
-        public static SurfaceProperty GetTheSurfaceSize()
+        public static SurfaceSizeProperty GetTheSurfaceSize()
         {
             int xSize = 0;
             int ySize = 0;
@@ -63,7 +63,7 @@ namespace MarsRoverControl.Service
 
             } while (enteringCompleted == false);
 
-            return new SurfaceProperty { width = xSize, height = ySize };
+            return new SurfaceSizeProperty { width = xSize, height = ySize };
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace MarsRoverControl.Service
                         bool controlForDirection = Char.TryParse(fields.Last(), out directionValue);
                         if (controlForDirection)
                         {
-                            int value = EnumerationHelper<Directions>.GetEnumItemValue(directionValue);
+                            int value = EnumerationHelper<Direction>.GetEnumItemValue(directionValue);
                             if (value > -1)
                             {
                                 directionState = value;
@@ -156,7 +156,7 @@ namespace MarsRoverControl.Service
                         bool isHasNonValidChar = false;
                         foreach (char command in fields)
                         {
-                            if (EnumerationHelper<Commands>.EnumValidationWithChar(command))
+                            if (EnumerationHelper<Command>.EnumValidationWithChar(command))
                             {
                                 commandList.Add(command);
                             }

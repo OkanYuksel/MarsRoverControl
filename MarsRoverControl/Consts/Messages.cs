@@ -6,7 +6,7 @@ namespace MarsRoverControl.Consts
 {
     public static class Messages
     {
-        public const string StartMessage = "Mars Rover mission started.\nHow large is the vehicle's scanning area?\n(You must enter the width and height with a space between them. For example :5 3)";
+        public const string StartMessage = "Mars Rover mission started.\nWhat is the size of the area that the vehicles will scan?\n(You must enter the width and height with a space between them. For example :5 3)";
         public const string IncorrectInputMessage = "You have entered incorrectly, try again.";
         public const string OutsideSurfaceAreaMessage = "The coordinate you want to go is outside the surface area.";
         public const string VehicleCheckOnSurfacePointMessage = "There is another rover vehicle exist at the coordinate you want to go.";

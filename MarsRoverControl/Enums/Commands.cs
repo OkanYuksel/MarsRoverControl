@@ -4,5 +4,5 @@ using System.Text;
 
 namespace MarsRoverControl.Enums
 {
-    public enum Commands { L, R, M };
+    public enum Command { L, R, M };
 }

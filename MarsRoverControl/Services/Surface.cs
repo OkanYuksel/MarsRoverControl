@@ -11,14 +11,14 @@ namespace MarsRoverControl.Service
         public List<SurfacePoint> surfacePointList { get; set; }
         public List<RoverVehicle> roverVehicleList { get; set; }
 
-        public void SurfaceBuilder(int _pointCountOnXAxis, int _pointCountOnYAxis)
+        public void SurfaceBuilder(int pointCountOnXAxis, int pointCountOnYAxis)
         {
             List<SurfacePoint> surfacePoints = new List<SurfacePoint>();
 
             //Generating surface points. Like x y coordinate system
-            for (var y = 0; y <= _pointCountOnYAxis; y++)
+            for (var y = 0; y <= pointCountOnYAxis; y++)
             {
-                for (var x = 0; x <= _pointCountOnXAxis; x++)
+                for (var x = 0; x <= pointCountOnXAxis; x++)
                 {
                     surfacePoints.Add(new SurfacePoint(x, y));
                 }
@@ -33,14 +33,14 @@ namespace MarsRoverControl.Service
         /// <param name="_locationOnTheXAxis"></param>
         /// <param name="_locationOnTheYAxis"></param>
         /// <returns>SurfacePoint object</returns>
-        public SurfacePoint GetSurfacePoint(int _locationOnTheXAxis, int _locationOnTheYAxis)
+        public SurfacePoint GetSurfacePoint(int locationOnTheXAxis, int locationOnTheYAxis)
         {
             if (this.surfacePointList == null)
             {
                 return null;
             }
 
-            return this.surfacePointList.Where(x => x.locationOnTheXAxis == _locationOnTheXAxis && x.locationOnTheYAxis == _locationOnTheYAxis).FirstOrDefault();
+            return this.surfacePointList.Where(x => x.locationOnTheXAxis == locationOnTheXAxis && x.locationOnTheYAxis == locationOnTheYAxis).FirstOrDefault();
         }
 
         /// <summary>
@@ -49,11 +49,11 @@ namespace MarsRoverControl.Service
         /// <param name="_locationOnTheXAxis"></param>
         /// <param name="_locationOnTheYAxis"></param>
         /// <returns>bool result</returns>
-        public bool VehicleMovePermissionControlForSurfacePoint(int _locationOnTheXAxis, int _locationOnTheYAxis, Guid _roverId)
+        public bool VehicleMovePermissionControlForSurfacePoint(int locationOnTheXAxis, int locationOnTheYAxis, Guid roverId)
         {
-            if (GetSurfacePoint(_locationOnTheXAxis, _locationOnTheYAxis) == null)
+            if (GetSurfacePoint(locationOnTheXAxis, locationOnTheYAxis) == null)
             {
-                Console.WriteLine(Messages.OutsideSurfaceAreaMessage + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
+                Console.WriteLine(Messages.OutsideSurfaceAreaMessage + " x : " + locationOnTheXAxis + " y : " + locationOnTheYAxis);
                 return false;
             }
 
@@ -61,13 +61,13 @@ namespace MarsRoverControl.Service
 
             if (roverVehicleList != null)
             {
-                RoverVehicle activeRoverListDifferentCurrentRover = roverVehicleList.Where(x => x.roverId != _roverId && x.vehiclePositionProperty.locationOnTheXAxis == _locationOnTheXAxis
-                && x.vehiclePositionProperty.locationOnTheYAxis == _locationOnTheYAxis).FirstOrDefault();
+                RoverVehicle activeRoverListDifferentCurrentRover = roverVehicleList.Where(x => x.roverId != roverId && x.vehiclePositionProperty.locationOnTheXAxis == locationOnTheXAxis
+                && x.vehiclePositionProperty.locationOnTheYAxis == locationOnTheYAxis).FirstOrDefault();
 
                 anyRoverExistInThisPosition = (activeRoverListDifferentCurrentRover != null);
                 if (anyRoverExistInThisPosition)
                 {
-                    Console.WriteLine(Messages.VehicleCheckOnSurfacePointMessage + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
+                    Console.WriteLine(Messages.VehicleCheckOnSurfacePointMessage + " x : " + locationOnTheXAxis + " y : " + locationOnTheYAxis);
                 }
             }
 
