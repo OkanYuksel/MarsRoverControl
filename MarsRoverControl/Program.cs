@@ -34,7 +34,7 @@ namespace MarsRoverControl
 
                 List<char> commands = InputManagerService.GetRoverCommands();
 
-                CommandResult commandResult = surface.RunCommands(firstRover.roverId, firstRover.vehiclePositionProperty, commands);
+                CommandResult commandResult = firstRover.RunCommands(firstRover.roverId, firstRover.vehiclePositionProperty, commands);
 
                 Console.WriteLine("commandResult rover 1   : " + JsonConvert.SerializeObject(commandResult));
            
@@ -49,7 +49,7 @@ namespace MarsRoverControl
 
                 List<char> commands2 = InputManagerService.GetRoverCommands();
 
-                CommandResult commandResult2 = surface.RunCommands(secondRover.roverId, secondRover.vehiclePositionProperty, commands2);
+                CommandResult commandResult2 = secondRover.RunCommands(secondRover.roverId, secondRover.vehiclePositionProperty, commands2);
 
 
                 Console.WriteLine("commandResult rover 2   : " + JsonConvert.SerializeObject(commandResult2));

@@ -76,72 +76,7 @@ namespace MarsRoverControl.Service
             return !anyRoverExistInThisPosition;
         }
 
-        public CommandResult SimulationForTheCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
-        {
-            VehiclePositionProperty storeObject = Clone(vehiclePositionProperty);
 
-            bool isSimulationFinishedSuccesfully = true;
-            foreach (var command in commandList)
-            {
-                if (command.ToString() == "L")
-                {
-                    CommandResult commandResult = TurnLeft(vehiclePositionProperty);
-                    if (commandResult.isCommandFinishedSuccessfully)
-                    {
-                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
-                    }
-                    else
-                    {
-                        isSimulationFinishedSuccesfully = false;
-                        break;
-                    }
-                }
-                else if (command.ToString() == "R")
-                {
-                    CommandResult commandResult = TurnRight(vehiclePositionProperty);
-                    if (commandResult.isCommandFinishedSuccessfully)
-                    {
-                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
-                    }
-                    else
-                    {
-                        isSimulationFinishedSuccesfully = false;
-                        break;
-                    }
-                }
-                else if (command.ToString() == "M")
-                {
-                    CommandResult commandResult = MoveForward(roverId, vehiclePositionProperty);
-                    if (commandResult.isCommandFinishedSuccessfully)
-                    {
-                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
-                    }
-                    else
-                    {
-                        isSimulationFinishedSuccesfully = false;
-                        break;
-                    }
-                }
-            }
-
-            return new CommandResult
-            {
-                isCommandFinishedSuccessfully = isSimulationFinishedSuccesfully,
-                vehicleNewPositionProperty = isSimulationFinishedSuccesfully ? vehiclePositionProperty : storeObject
-            };
-        }
-
-        public CommandResult RunCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
-        {
-            CommandResult commandResult = SimulationForTheCommands(roverId, vehiclePositionProperty, commandList);
-
-            if (commandResult.isCommandFinishedSuccessfully)
-            {
-                RoverVehicle roverVehicle = GetRoverWithId(roverId);
-                roverVehicle.vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
-            }
-            return commandResult;
-        }
 
         /// <summary>
         /// Moves the rover to new location.
@@ -197,76 +132,8 @@ namespace MarsRoverControl.Service
             return surfacePoint;
         }
 
-        public static T Clone<T>(T source)
-        {
-            var serialized = JsonConvert.SerializeObject(source);
-            return JsonConvert.DeserializeObject<T>(serialized);
-        }
+     
 
-        public CommandResult TurnLeft(VehiclePositionProperty vehiclePositionProperty)
-        {
-            if (vehiclePositionProperty.vehicleDirectionState > 0)
-            {
-
-                vehiclePositionProperty.vehicleDirectionState -= 1;
-            }
-            else
-            {
-                vehiclePositionProperty.vehicleDirectionState = DirectionService.GetDirectionCount() - 1;
-            }
-
-            return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
-        }
-
-        public CommandResult TurnRight(VehiclePositionProperty vehiclePositionProperty)
-        {
-            vehiclePositionProperty.vehicleDirectionState = (vehiclePositionProperty.vehicleDirectionState + 1) % DirectionService.GetDirectionCount();
-            return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
-        }
-
-        public CommandResult MoveForward(Guid roverId, VehiclePositionProperty vehiclePositionProperty)
-        {
-            bool isCommandFinishedSuccessfully = false;
-            if (vehiclePositionProperty != null)
-            {
-                switch (vehiclePositionProperty.vehicleDirectionState)
-                {
-                    case 0:
-                        if (VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis + 1, roverId))
-                        {
-                            vehiclePositionProperty.locationOnTheYAxis += 1;
-                            isCommandFinishedSuccessfully = true;
-                        }
-                        break;
-                    case 1:
-                        if (VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis + 1, vehiclePositionProperty.locationOnTheYAxis, roverId))
-                        {
-                            vehiclePositionProperty.locationOnTheXAxis += 1;
-                            isCommandFinishedSuccessfully = true;
-                        }
-                        break;
-                    case 2:
-                        if (VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis - 1, roverId))
-                        {
-                            vehiclePositionProperty.locationOnTheYAxis -= 1;
-                            isCommandFinishedSuccessfully = true;
-                        }
-                        break;
-                    case 3:
-                        if (VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis - 1, vehiclePositionProperty.locationOnTheYAxis, roverId))
-                        {
-                            vehiclePositionProperty.locationOnTheXAxis -= 1;
-                            isCommandFinishedSuccessfully = true;
-                        }
-                        break;
-                    default:
-                        Console.WriteLine(Messages.UNDEFINED_DIRECTION_MESSAGE);
-                        break;
-                }
-            }
-
-            return new CommandResult { isCommandFinishedSuccessfully = isCommandFinishedSuccessfully, vehicleNewPositionProperty = vehiclePositionProperty };
-        }
 
         public void VehicleRegistrationToSurface(RoverVehicle roverVehicle)
         {

@@ -1,5 +1,7 @@
 ﻿using MarsRoverControl.Consts;
 using MarsRoverControl.Interfaces;
+using MarsRoverControl.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,42 +43,128 @@ namespace MarsRoverControl.Service
             //}
         }
 
-        public string TurnLeft()
+        public CommandResult SimulationForTheCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
+        {
+            VehiclePositionProperty storeObject = Clone(vehiclePositionProperty);
+
+            bool isSimulationFinishedSuccesfully = true;
+            foreach (var command in commandList)
+            {
+                if (command.ToString() == "L")
+                {
+                    CommandResult commandResult = TurnLeft(vehiclePositionProperty);
+                    if (commandResult.isCommandFinishedSuccessfully)
+                    {
+                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+                    }
+                    else
+                    {
+                        isSimulationFinishedSuccesfully = false;
+                        break;
+                    }
+                }
+                else if (command.ToString() == "R")
+                {
+                    CommandResult commandResult = TurnRight(vehiclePositionProperty);
+                    if (commandResult.isCommandFinishedSuccessfully)
+                    {
+                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+                    }
+                    else
+                    {
+                        isSimulationFinishedSuccesfully = false;
+                        break;
+                    }
+                }
+                else if (command.ToString() == "M")
+                {
+                    CommandResult commandResult = MoveForward(roverId, vehiclePositionProperty);
+                    if (commandResult.isCommandFinishedSuccessfully)
+                    {
+                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+                    }
+                    else
+                    {
+                        isSimulationFinishedSuccesfully = false;
+                        break;
+                    }
+                }
+            }
+
+            return new CommandResult
+            {
+                isCommandFinishedSuccessfully = isSimulationFinishedSuccesfully,
+                vehicleNewPositionProperty = isSimulationFinishedSuccesfully ? vehiclePositionProperty : storeObject
+            };
+        }
+
+        public CommandResult RunCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
+        {
+            CommandResult commandResult = SimulationForTheCommands(roverId, vehiclePositionProperty, commandList);
+
+            if (commandResult.isCommandFinishedSuccessfully)
+            {
+                RoverVehicle roverVehicle = surface.GetRoverWithId(roverId);
+                roverVehicle.vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+            }
+            return commandResult;
+        }
+
+        public CommandResult TurnLeft(VehiclePositionProperty vehiclePositionProperty)
         {
             if (vehiclePositionProperty.vehicleDirectionState > 0)
             {
+
                 vehiclePositionProperty.vehicleDirectionState -= 1;
             }
             else
             {
                 vehiclePositionProperty.vehicleDirectionState = DirectionService.GetDirectionCount() - 1;
             }
-            return GetRoverPositionAndDirection();
+
+            return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
         }
 
-        public string TurnRight()
+        public CommandResult TurnRight(VehiclePositionProperty vehiclePositionProperty)
         {
             vehiclePositionProperty.vehicleDirectionState = (vehiclePositionProperty.vehicleDirectionState + 1) % DirectionService.GetDirectionCount();
-            return GetRoverPositionAndDirection();
+            return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
         }
 
-        public string MoveForward()
+        public CommandResult MoveForward(Guid roverId, VehiclePositionProperty vehiclePositionProperty)
         {
+            bool isCommandFinishedSuccessfully = false;
             if (vehiclePositionProperty != null)
             {
                 switch (vehiclePositionProperty.vehicleDirectionState)
                 {
                     case 0:
-                        vehiclePositionProperty.locationOnTheYAxis += 1;
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis + 1, roverId))
+                        {
+                            vehiclePositionProperty.locationOnTheYAxis += 1;
+                            isCommandFinishedSuccessfully = true;
+                        }
                         break;
                     case 1:
-                        vehiclePositionProperty.locationOnTheXAxis += 1;
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis + 1, vehiclePositionProperty.locationOnTheYAxis, roverId))
+                        {
+                            vehiclePositionProperty.locationOnTheXAxis += 1;
+                            isCommandFinishedSuccessfully = true;
+                        }
                         break;
                     case 2:
-                        vehiclePositionProperty.locationOnTheYAxis -= 1;
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis - 1, roverId))
+                        {
+                            vehiclePositionProperty.locationOnTheYAxis -= 1;
+                            isCommandFinishedSuccessfully = true;
+                        }
                         break;
                     case 3:
-                        vehiclePositionProperty.locationOnTheXAxis -= 1;
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis - 1, vehiclePositionProperty.locationOnTheYAxis, roverId))
+                        {
+                            vehiclePositionProperty.locationOnTheXAxis -= 1;
+                            isCommandFinishedSuccessfully = true;
+                        }
                         break;
                     default:
                         Console.WriteLine(Messages.UNDEFINED_DIRECTION_MESSAGE);
@@ -84,7 +172,13 @@ namespace MarsRoverControl.Service
                 }
             }
 
-            return GetRoverPositionAndDirection();
+            return new CommandResult { isCommandFinishedSuccessfully = isCommandFinishedSuccessfully, vehicleNewPositionProperty = vehiclePositionProperty };
+        }
+
+        public static T Clone<T>(T source)
+        {
+            var serialized = JsonConvert.SerializeObject(source);
+            return JsonConvert.DeserializeObject<T>(serialized);
         }
 
         public string GetRoverPositionAndDirection()
@@ -95,25 +189,6 @@ namespace MarsRoverControl.Service
         public string GetRoverPositionOnSurface()
         {
             return vehiclePositionProperty.locationOnTheXAxis + " " + vehiclePositionProperty.locationOnTheYAxis;
-        }
-
-        public void RunCommands(List<char> commandList)
-        {
-            foreach (var command in commandList)
-            {
-                if (command.ToString() == "L")
-                {
-                    TurnLeft();
-                }
-                else if (command.ToString() == "R")
-                {
-                    TurnRight();
-                }
-                else if (command.ToString() == "M")
-                {
-                    MoveForward();
-                }
-            }
         }
 
     }
