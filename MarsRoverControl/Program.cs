@@ -15,7 +15,7 @@ namespace MarsRoverControl
         {
             try
             {
-                // Program starting with start message. 
+                //Application starting with start message. 
                 Console.WriteLine(Messages.START_MESSAGE);
 
                 //Asking surface size to user

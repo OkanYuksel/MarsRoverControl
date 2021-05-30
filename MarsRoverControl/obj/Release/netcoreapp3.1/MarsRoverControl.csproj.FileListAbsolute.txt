@@ -10,3 +10,7 @@ C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Release\netcore
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Release\netcoreapp3.1\MarsRoverControl.dll
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Release\netcoreapp3.1\MarsRoverControl.pdb
 C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Release\netcoreapp3.1\MarsRoverControl.genruntimeconfig.cache
+C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\bin\Release\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\bin\Release\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\bin\Release\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\OKAN\source\repos\MarsRoverControl\MarsRoverControl\obj\Release\netcoreapp3.1\MarsRoverControl.csproj.CopyComplete
