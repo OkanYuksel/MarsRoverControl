@@ -11,19 +11,24 @@ namespace MarsRoverControl.Service
         public VehiclePositionProperty vehiclePositionProperty { get; set; }
         public ISurface surface { get; set; }
         public Guid roverId { get; set; }
+        public bool isActive { get; set; }
 
         public RoverVehicle(int _locationOnTheXAxis, int _locationOnTheYAxis, int _vehicleDirectionState, ISurface _surface)
         {
+            isActive = true;
+
             if (_surface == null)
             {
-                // TODO yüzey alanı setlenmedi. Uyarı.
+                Console.WriteLine(Messages.SURFACE_AREA_NOT_DEFINED_MESSAGE);
+                isActive = false;
             }
 
             roverId = Guid.NewGuid();
 
             if (!_surface.VehicleMovePermissionControlForSurfacePoint(_locationOnTheXAxis, _locationOnTheYAxis, roverId))
             {
-                // TODO belirtilen koordinatlar konumlanmak için uygun değil.
+                //Message forward to user in VehicleMovePermissionControlForSurfacePoint method.
+                isActive = false;
             }
 
             vehiclePositionProperty = new VehiclePositionProperty();
