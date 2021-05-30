@@ -1,4 +1,5 @@
 ﻿using MarsRoverControl.Consts;
+using MarsRoverControl.Enums;
 using MarsRoverControl.Interfaces;
 using MarsRoverControl.Models;
 using MarsRoverControl.Service;
@@ -27,80 +28,17 @@ namespace MarsRoverControl
 
                 surface.SurfaceBuilder(surfaceProperty.width, surfaceProperty.height);
 
-                bool firstRoverCreatedSuccessfully = false;
-                do
+                for (int i = 0; i < Settings.howManyRoverWillResearch; i++)
                 {
-                    //rover 1
-                    //For definition the first rover vehicle, asking location and direction in the surface.
-                    VehiclePositionProperty vehiclePositionPropertyForFirstRover = InputManagerService.GetRoverDefinition();
-
-                    //rover building
-                    RoverVehicle firstRover = new RoverVehicle(vehiclePositionPropertyForFirstRover.locationOnTheXAxis,
-                        vehiclePositionPropertyForFirstRover.locationOnTheYAxis,
-                        vehiclePositionPropertyForFirstRover.vehicleDirectionState, surface);
-
-                    if (firstRover.isActive)
+                    if (i != 0)
                     {
-                        //rover created successfully.
-                        firstRoverCreatedSuccessfully = true;
-
-                        //To move the rover, the user is prompted to enter commands
-                        List<char> commandForFirstRover = InputManagerService.GetRoverCommands();
-
-                        //Commands running
-                        CommandResult commandResultForFirstRover = firstRover.RunCommands(firstRover.roverId, firstRover.vehiclePositionProperty, commandForFirstRover);
-
-                        if (commandResultForFirstRover.isCommandFinishedSuccessfully)
-                        {
-                            Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResultForFirstRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForFirstRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResultForFirstRover.vehicleNewPositionProperty.vehicleDirectionState));
-                        }
-                        else
-                        {
-                            Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResultForFirstRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForFirstRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResultForFirstRover.vehicleNewPositionProperty.vehicleDirectionState));
-                        }
-
+                        Console.WriteLine(Messages.ANOTHER_ROVER_SPAWN_MESSAGE);
                     }
-                } while (firstRoverCreatedSuccessfully == false);
 
+                    CreateRoverOnTheSurface(surface);
+                }
 
-                /////////////////////
-                bool secondRoverCreatedSuccessfully = false;
-                do
-                {
-                    //rover 2
-                    //For definition the second rover vehicle, asking location and direction in the surface.
-                    VehiclePositionProperty vehiclePositionPropertyForSecondRover = InputManagerService.GetRoverDefinition();
-
-                    //rover building
-                    RoverVehicle secondRover = new RoverVehicle(vehiclePositionPropertyForSecondRover.locationOnTheXAxis,
-                        vehiclePositionPropertyForSecondRover.locationOnTheYAxis,
-                        vehiclePositionPropertyForSecondRover.vehicleDirectionState, surface);
-
-                    if (secondRover.isActive)
-                    {
-                        //rover created successfully.
-                        secondRoverCreatedSuccessfully = true;
-
-                        //To move the rover, the user is prompted to enter commands
-                        List<char> commandsForSecondRover = InputManagerService.GetRoverCommands();
-
-                        //Commands running
-                        CommandResult commandResultForSecondRover = secondRover.RunCommands(secondRover.roverId, secondRover.vehiclePositionProperty, commandsForSecondRover);
-
-                        if (commandResultForSecondRover.isCommandFinishedSuccessfully)
-                        {
-                            Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResultForSecondRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForSecondRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResultForSecondRover.vehicleNewPositionProperty.vehicleDirectionState));
-                        }
-                        else
-                        {
-                            Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResultForSecondRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForSecondRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResultForSecondRover.vehicleNewPositionProperty.vehicleDirectionState));
-                        }
-                        Console.ReadLine();
-                    }
-                } while (secondRoverCreatedSuccessfully == false);
-
-                //////////////
-
+                Console.ReadLine();
             }
             catch (Exception ex)
             {
@@ -108,7 +46,59 @@ namespace MarsRoverControl
             }
         }
 
+        /// <summary>
+        /// This method builds new rover and moves rover
+        /// </summary>
+        /// <param name="surface"></param>
+        private static void CreateRoverOnTheSurface(ISurface surface)
+        {
+            bool roverCreatedSuccessfully = false;
+            do
+            {
+                //For definition the first rover vehicle, asking location and direction in the surface.
+                VehiclePositionProperty vehiclePositionPropertyForRover = InputManagerService.GetRoverDefinition();
 
+                //rover building
+                RoverVehicle rover = new RoverVehicle(vehiclePositionPropertyForRover.locationOnTheXAxis,
+                    vehiclePositionPropertyForRover.locationOnTheYAxis,
+                    vehiclePositionPropertyForRover.vehicleDirectionState, surface);
+
+                if (rover.isActive)
+                {
+                    //rover created successfully.
+                    roverCreatedSuccessfully = true;
+                    DoCommandOperationsForRover(rover);
+                }
+            } while (roverCreatedSuccessfully == false);
+        }
+
+
+        /// <summary>
+        /// This method is used to move the rover. And writes outputs the new position of the rover.
+        /// </summary>
+        /// <param name="rover"></param>
+        private static void DoCommandOperationsForRover(RoverVehicle rover)
+        {
+            bool firstRoverMovedSuccessfully = false;
+            do
+            {
+                //To move the rover, the user is prompted to enter commands
+                List<char> commandListForRover = InputManagerService.GetRoverCommands();
+
+                //Commands running
+                CommandResult commandResultForRover = rover.RunCommands(rover.roverId, rover.vehiclePositionProperty, commandListForRover);
+
+                if (commandResultForRover.isCommandFinishedSuccessfully)
+                {
+                    firstRoverMovedSuccessfully = true;
+                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResultForRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + EnumerationHelper<RoverDirections>.GetEnumItemName(commandResultForRover.vehicleNewPositionProperty.vehicleDirectionState));
+                }
+                else
+                {
+                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_UNSUCCESSFULLY_MESSAGE + commandResultForRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + EnumerationHelper<RoverDirections>.GetEnumItemName(commandResultForRover.vehicleNewPositionProperty.vehicleDirectionState));
+                }
+            } while (firstRoverMovedSuccessfully == false);
+        }
     }
 
 

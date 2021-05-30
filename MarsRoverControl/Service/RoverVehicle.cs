@@ -1,8 +1,10 @@
 ﻿using MarsRoverControl.Consts;
+using MarsRoverControl.Enums;
 using MarsRoverControl.Interfaces;
 using MarsRoverControl.Models;
 using System;
 using System.Collections.Generic;
+using static MarsRoverControl.Service.InputManagerService;
 
 namespace MarsRoverControl.Service
 {
@@ -31,18 +33,15 @@ namespace MarsRoverControl.Service
                 isActive = false;
             }
 
-            vehiclePositionProperty = new VehiclePositionProperty();
-            vehiclePositionProperty.locationOnTheXAxis = _locationOnTheXAxis;
-            vehiclePositionProperty.locationOnTheYAxis = _locationOnTheYAxis;
-            vehiclePositionProperty.vehicleDirectionState = _vehicleDirectionState;
-            surface = _surface;
-            surface.VehicleRegistrationToSurface(this);
-
-            //SurfacePoint surfacePoint = surface.GetSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis);
-            //if (surfacePoint != null)
-            //{
-            //    surfacePoint.PlaceVehicleToPoint(this);
-            //}
+            if (isActive)
+            {
+                vehiclePositionProperty = new VehiclePositionProperty();
+                vehiclePositionProperty.locationOnTheXAxis = _locationOnTheXAxis;
+                vehiclePositionProperty.locationOnTheYAxis = _locationOnTheYAxis;
+                vehiclePositionProperty.vehicleDirectionState = _vehicleDirectionState;
+                surface = _surface;
+                surface.VehicleRegistrationToSurface(this);
+            }
         }
 
         /// <summary>
@@ -59,7 +58,7 @@ namespace MarsRoverControl.Service
             bool isSimulationFinishedSuccesfully = true;
             foreach (var command in commandList)
             {
-                if (command.ToString() == InputManagerService.GetCommandName((int)InputManagerService.Commands.L))
+                if (command.ToString() == EnumerationHelper<Commands>.GetEnumItemName((int)Commands.L))
                 {
                     CommandResult commandResult = TurnLeft(vehiclePositionProperty);
                     if (commandResult.isCommandFinishedSuccessfully)
@@ -72,7 +71,7 @@ namespace MarsRoverControl.Service
                         break;
                     }
                 }
-                else if (command.ToString() == InputManagerService.GetCommandName((int)InputManagerService.Commands.R))
+                else if (command.ToString() == EnumerationHelper<Commands>.GetEnumItemName((int)Commands.R))
                 {
                     CommandResult commandResult = TurnRight(vehiclePositionProperty);
                     if (commandResult.isCommandFinishedSuccessfully)
@@ -85,7 +84,7 @@ namespace MarsRoverControl.Service
                         break;
                     }
                 }
-                else if (command.ToString() == InputManagerService.GetCommandName((int)InputManagerService.Commands.M))
+                else if (command.ToString() == EnumerationHelper<Commands>.GetEnumItemName((int)Commands.M))
                 {
                     CommandResult commandResult = MoveForward(roverId, vehiclePositionProperty);
                     if (commandResult.isCommandFinishedSuccessfully)
@@ -141,7 +140,7 @@ namespace MarsRoverControl.Service
             }
             else
             {
-                vehiclePositionProperty.vehicleDirectionState = DirectionService.GetDirectionCount() - 1;
+                vehiclePositionProperty.vehicleDirectionState = EnumerationHelper<RoverDirections>.GetEnumItemsCount() - 1;
             }
 
             return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
@@ -154,7 +153,7 @@ namespace MarsRoverControl.Service
         /// <returns>CommandResult object</returns>
         public CommandResult TurnRight(VehiclePositionProperty vehiclePositionProperty)
         {
-            vehiclePositionProperty.vehicleDirectionState = (vehiclePositionProperty.vehicleDirectionState + 1) % DirectionService.GetDirectionCount();
+            vehiclePositionProperty.vehicleDirectionState = (vehiclePositionProperty.vehicleDirectionState + 1) % EnumerationHelper<RoverDirections>.GetEnumItemsCount();
             return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
         }
 
@@ -211,7 +210,7 @@ namespace MarsRoverControl.Service
 
         public string GetRoverPositionAndDirection()
         {
-            return GetRoverPositionOnSurface() + " " + Enum.GetName(typeof(DirectionService.RoverDirections), vehiclePositionProperty.vehicleDirectionState);
+            return GetRoverPositionOnSurface() + " " + Enum.GetName(typeof(RoverDirections), vehiclePositionProperty.vehicleDirectionState);
         }
 
         public string GetRoverPositionOnSurface()
