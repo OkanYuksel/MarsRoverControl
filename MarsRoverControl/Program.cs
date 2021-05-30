@@ -29,26 +29,26 @@ namespace MarsRoverControl
 
                 //rover 1
                 //For definition the first rover vehicle, asking location and direction in the surface.
-                VehiclePositionProperty vehiclePositionProperty = InputManagerService.GetRoverDefinition();
+                VehiclePositionProperty vehiclePositionPropertyForFirstRover = InputManagerService.GetRoverDefinition();
 
                 //rover building
-                RoverVehicle firstRover = new RoverVehicle(vehiclePositionProperty.locationOnTheXAxis,
-                    vehiclePositionProperty.locationOnTheYAxis,
-                    vehiclePositionProperty.vehicleDirectionState, surface);
+                RoverVehicle firstRover = new RoverVehicle(vehiclePositionPropertyForFirstRover.locationOnTheXAxis,
+                    vehiclePositionPropertyForFirstRover.locationOnTheYAxis,
+                    vehiclePositionPropertyForFirstRover.vehicleDirectionState, surface);
 
                 //To move the rover, the user is prompted to enter commands
-                List<char> commands = InputManagerService.GetRoverCommands();
+                List<char> commandForFirstRover = InputManagerService.GetRoverCommands();
 
                 //Commands running
-                CommandResult commandResult = firstRover.RunCommands(firstRover.roverId, firstRover.vehiclePositionProperty, commands);
+                CommandResult commandResultForFirstRover = firstRover.RunCommands(firstRover.roverId, firstRover.vehiclePositionProperty, commandForFirstRover);
 
-                if (commandResult.isCommandFinishedSuccessfully)
+                if (commandResultForFirstRover.isCommandFinishedSuccessfully)
                 {
-                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResult.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResult.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResult.vehicleNewPositionProperty.vehicleDirectionState));
+                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResultForFirstRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForFirstRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResultForFirstRover.vehicleNewPositionProperty.vehicleDirectionState));
                 }
                 else
                 {
-                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResult.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResult.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResult.vehicleNewPositionProperty.vehicleDirectionState));
+                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResultForFirstRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForFirstRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResultForFirstRover.vehicleNewPositionProperty.vehicleDirectionState));
                 }
 
                 /////////////////////
@@ -56,26 +56,26 @@ namespace MarsRoverControl
 
                 //rover 2
                 //For definition the second rover vehicle, asking location and direction in the surface.
-                VehiclePositionProperty vehiclePositionProperty2 = InputManagerService.GetRoverDefinition();
+                VehiclePositionProperty vehiclePositionPropertyForSecondRover = InputManagerService.GetRoverDefinition();
 
                 //rover building
-                RoverVehicle secondRover = new RoverVehicle(vehiclePositionProperty2.locationOnTheXAxis,
-                    vehiclePositionProperty2.locationOnTheYAxis,
-                    vehiclePositionProperty2.vehicleDirectionState, surface);
+                RoverVehicle secondRover = new RoverVehicle(vehiclePositionPropertyForSecondRover.locationOnTheXAxis,
+                    vehiclePositionPropertyForSecondRover.locationOnTheYAxis,
+                    vehiclePositionPropertyForSecondRover.vehicleDirectionState, surface);
 
                 //To move the rover, the user is prompted to enter commands
-                List<char> commands2 = InputManagerService.GetRoverCommands();
+                List<char> commandsForSecondRover = InputManagerService.GetRoverCommands();
 
                 //Commands running
-                CommandResult commandResult2 = secondRover.RunCommands(secondRover.roverId, secondRover.vehiclePositionProperty, commands2);
+                CommandResult commandResultForSecondRover = secondRover.RunCommands(secondRover.roverId, secondRover.vehiclePositionProperty, commandsForSecondRover);
 
-                if (commandResult2.isCommandFinishedSuccessfully)
+                if (commandResultForSecondRover.isCommandFinishedSuccessfully)
                 {
-                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResult2.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResult2.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResult2.vehicleNewPositionProperty.vehicleDirectionState));
+                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResultForSecondRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForSecondRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResultForSecondRover.vehicleNewPositionProperty.vehicleDirectionState));
                 }
                 else
                 {
-                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResult2.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResult2.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResult2.vehicleNewPositionProperty.vehicleDirectionState));
+                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResultForSecondRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForSecondRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + DirectionService.GetDirectionName(commandResultForSecondRover.vehicleNewPositionProperty.vehicleDirectionState));
                 }
                 Console.ReadLine();
 
