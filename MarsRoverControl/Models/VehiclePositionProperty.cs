@@ -9,5 +9,10 @@ namespace MarsRoverControl.Service
         public int locationOnTheXAxis { get; set; }
         public int locationOnTheYAxis { get; set; }
         public int vehicleDirectionState { get; set; }
+
+        public VehiclePositionProperty Clone()
+        {
+            return (VehiclePositionProperty)this.MemberwiseClone();
+        }
     }
 }

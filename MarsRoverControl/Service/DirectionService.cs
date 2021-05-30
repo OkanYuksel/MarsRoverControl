@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MarsRoverControl.Service
 {
@@ -9,13 +7,7 @@ namespace MarsRoverControl.Service
         /// <summary>
         /// It is indexed clockwise starting from the north. If want to add intermediate directions, attention should be to this.
         /// </summary>
-        public enum RoverDirections
-        {
-            N = 0,
-            E = 1,
-            S = 2,
-            W = 3
-        };
+        public enum RoverDirections { N, E, S, W };
 
         /// <summary>
         /// Returns the direction count.
@@ -54,24 +46,6 @@ namespace MarsRoverControl.Service
         {
             return GetDirectionState(direction) > -1;
         }
-
-        /// <summary>
-        /// Validates the character used for the command.
-        /// </summary>
-        /// <param name="command"></param>
-        /// <returns>bool result</returns>
-        public static bool CommandValidation(char command)
-        {
-            if(command.ToString() == "L" || command.ToString() == "R" || command.ToString() == "M")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
 
         /// <summary>
         /// Finds the name of the direction state that comes as a parameter.
