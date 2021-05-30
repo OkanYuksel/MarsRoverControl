@@ -1,4 +1,7 @@
-﻿using MarsRoverControl.Interfaces;
+﻿using MarsRoverControl.Consts;
+using MarsRoverControl.Interfaces;
+using MarsRoverControl.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +12,7 @@ namespace MarsRoverControl.Service
     public class Surface : ISurface
     {
         public List<SurfacePoint> surfacePointList { get; set; }
-
-        public int surfaceCode { get; set; }
+        public List<RoverVehicle> roverVehicleList { get; set; }
 
         public void SurfaceBuilder(int _pointCountOnXAxis, int _pointCountOnYAxis)
         {
@@ -27,6 +29,12 @@ namespace MarsRoverControl.Service
             surfacePointList = surfacePoints;
         }
 
+        /// <summary>
+        /// This method finds the surface point whose coordinates are given.
+        /// </summary>
+        /// <param name="_locationOnTheXAxis"></param>
+        /// <param name="_locationOnTheYAxis"></param>
+        /// <returns>SurfacePoint object</returns>
         public SurfacePoint GetSurfacePoint(int _locationOnTheXAxis, int _locationOnTheYAxis)
         {
             if (this.surfacePointList == null)
@@ -35,6 +43,111 @@ namespace MarsRoverControl.Service
             }
 
             return this.surfacePointList.Where(x => x.locationOnTheXAxis == _locationOnTheXAxis && x.locationOnTheYAxis == _locationOnTheYAxis).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// It checks the suitability of the given point to move.
+        /// </summary>
+        /// <param name="_locationOnTheXAxis"></param>
+        /// <param name="_locationOnTheYAxis"></param>
+        /// <returns>bool result</returns>
+        public bool VehicleMovePermissionControlForSurfacePoint(int _locationOnTheXAxis, int _locationOnTheYAxis, Guid _roverId)
+        {
+            if (GetSurfacePoint(_locationOnTheXAxis, _locationOnTheYAxis) == null)
+            {
+                Console.WriteLine(Messages.OUTSIDE_SURFACE_AREA_MESSAGE + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
+                return false;
+            }
+
+            bool anyRoverExistInThisPosition = false;
+
+            if (roverVehicleList != null)
+            {
+                RoverVehicle activeRoverListDifferentCurrentRover = roverVehicleList.Where(x => x.roverId != _roverId && x.vehiclePositionProperty.locationOnTheXAxis == _locationOnTheXAxis
+                && x.vehiclePositionProperty.locationOnTheYAxis == _locationOnTheYAxis).FirstOrDefault();
+
+                anyRoverExistInThisPosition = (activeRoverListDifferentCurrentRover != null);
+                if (anyRoverExistInThisPosition)
+                {
+                    Console.WriteLine(Messages.DIFFERENT_VEHICLE_EXIST_ON_SURFACE_POINT + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
+                }
+            }
+
+            return !anyRoverExistInThisPosition;
+        }
+
+
+
+        /// <summary>
+        /// Moves the rover to new location.
+        /// </summary>
+        /// <param name="roverId"></param>
+        /// <param name="vehiclePositionProperty"></param>
+        /// <returns></returns>
+        //public bool TransportVehicleToPoint(Guid roverId, VehiclePositionProperty vehiclePositionProperty)
+        //{
+        //    SurfacePoint currentSurfacePoint = GetRoverLocation(roverId);
+        //    bool isOldLocationRemoved = false;
+        //    bool newLocationBinded = false;
+        //    foreach (var surfacePoint in surfacePointList)
+        //    {
+        //        if (surfacePoint.locationOnTheXAxis == currentSurfacePoint.locationOnTheXAxis && surfacePoint.locationOnTheYAxis == currentSurfacePoint.locationOnTheYAxis)
+        //        {
+        //            surfacePoint.rover = null;
+        //            isOldLocationRemoved = true;
+        //        }
+        //        else if (surfacePoint.locationOnTheXAxis == vehiclePositionProperty.locationOnTheXAxis && surfacePoint.locationOnTheYAxis == vehiclePositionProperty.locationOnTheYAxis)
+        //        {
+        //            surfacePoint.rover = currentSurfacePoint.rover;
+        //            newLocationBinded = true;
+        //        }
+        //    }
+
+        //    if (isOldLocationRemoved && newLocationBinded)
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
+
+        /// <summary>
+        /// Finds the rover's current location.
+        /// </summary>
+        /// <param name="roverId"></param>
+        /// <returns>SurfacePoint object</returns>
+        public SurfacePoint GetRoverLocation(Guid roverId)
+        {
+            SurfacePoint surfacePoint = null;
+            if (roverVehicleList != null)
+            {
+                RoverVehicle roverVehicle = GetRoverWithId(roverId);
+                if (roverVehicle != null)
+                {
+                    surfacePoint = GetSurfacePoint(roverVehicle.vehiclePositionProperty.locationOnTheXAxis, roverVehicle.vehiclePositionProperty.locationOnTheYAxis);
+                }
+            }
+            return surfacePoint;
+        }
+
+     
+
+
+        public void VehicleRegistrationToSurface(RoverVehicle roverVehicle)
+        {
+            if (roverVehicleList == null)
+            {
+                roverVehicleList = new List<RoverVehicle>();
+            }
+            roverVehicleList.Add(roverVehicle);
+        }
+
+        public RoverVehicle GetRoverWithId(Guid roverId)
+        {
+            RoverVehicle roverVehicle = roverVehicleList.Where(x => x.roverId == roverId).FirstOrDefault();
+            return roverVehicle;
         }
     }
 }

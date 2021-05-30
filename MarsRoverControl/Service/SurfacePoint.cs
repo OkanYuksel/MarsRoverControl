@@ -8,7 +8,7 @@ namespace MarsRoverControl.Service
     {
         public int locationOnTheXAxis { get; }
         public int locationOnTheYAxis { get; }
-        public RoverVehicle rover { get; set; }
+        //public RoverVehicle rover { get; set; }
 
 
         public SurfacePoint(int _locationOnTheXAxis, int _locationOnTheYAxis)
@@ -17,10 +17,10 @@ namespace MarsRoverControl.Service
             locationOnTheYAxis = _locationOnTheYAxis;
         }
 
-        public void PlaceVehicleToPoint(RoverVehicle roverVehicle)
-        {
-            rover = roverVehicle;
-        }
+        //public void PlaceVehicleToPoint(RoverVehicle roverVehicle)
+        //{
+        //    rover = roverVehicle;
+        //}
 
 
     }

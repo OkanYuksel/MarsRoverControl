@@ -1,5 +1,7 @@
-﻿using MarsRoverControl.Enums;
+﻿using MarsRoverControl.Consts;
 using MarsRoverControl.Interfaces;
+using MarsRoverControl.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +11,9 @@ namespace MarsRoverControl.Service
 {
     public class RoverVehicle : IRoverVehicle
     {
-        private int locationOnTheXAxis { get; set; }
-        private int locationOnTheYAxis { get; set; }
-        private int vehicleDirectionState { get; set; }
+        public VehiclePositionProperty vehiclePositionProperty { get; set; }
         public ISurface surface { get; set; }
+        public Guid roverId { get; set; }
 
         public RoverVehicle(int _locationOnTheXAxis, int _locationOnTheYAxis, int _vehicleDirectionState, ISurface _surface)
         {
@@ -21,71 +22,174 @@ namespace MarsRoverControl.Service
                 // TODO yüzey alanı setlenmedi. Uyarı.
             }
 
-            locationOnTheXAxis = _locationOnTheXAxis;
-            locationOnTheYAxis = _locationOnTheYAxis;
-            vehicleDirectionState = _vehicleDirectionState;
+            roverId = Guid.NewGuid();
+
+            if (!_surface.VehicleMovePermissionControlForSurfacePoint(_locationOnTheXAxis, _locationOnTheYAxis, roverId))
+            {
+                // TODO belirtilen koordinatlar konumlanmak için uygun değil.
+            }
+
+            vehiclePositionProperty = new VehiclePositionProperty();
+            vehiclePositionProperty.locationOnTheXAxis = _locationOnTheXAxis;
+            vehiclePositionProperty.locationOnTheYAxis = _locationOnTheYAxis;
+            vehiclePositionProperty.vehicleDirectionState = _vehicleDirectionState;
             surface = _surface;
+            surface.VehicleRegistrationToSurface(this);
 
-            SurfacePoint surfacePoint = surface.GetSurfacePoint(locationOnTheXAxis, locationOnTheYAxis);
-
-            if (surfacePoint == null)
-            {
-                // TODO yüzey alanı dışına çıkıldı uyarı.
-            }
-
-            if (surfacePoint.rover == null)
-            {
-                // TODO yüzey alanı dışına çıkıldı uyarı.
-            }
-
-            surfacePoint.PlaceVehicleToPoint(this);
+            //SurfacePoint surfacePoint = surface.GetSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis);
+            //if (surfacePoint != null)
+            //{
+            //    surfacePoint.PlaceVehicleToPoint(this);
+            //}
         }
 
-        public string TurnLeft()
+        public CommandResult SimulationForTheCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
         {
-            if (vehicleDirectionState > 0)
+            VehiclePositionProperty storeObject = Clone(vehiclePositionProperty);
+
+            bool isSimulationFinishedSuccesfully = true;
+            foreach (var command in commandList)
             {
-                vehicleDirectionState -= 1;
+                if (command.ToString() == "L")
+                {
+                    CommandResult commandResult = TurnLeft(vehiclePositionProperty);
+                    if (commandResult.isCommandFinishedSuccessfully)
+                    {
+                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+                    }
+                    else
+                    {
+                        isSimulationFinishedSuccesfully = false;
+                        break;
+                    }
+                }
+                else if (command.ToString() == "R")
+                {
+                    CommandResult commandResult = TurnRight(vehiclePositionProperty);
+                    if (commandResult.isCommandFinishedSuccessfully)
+                    {
+                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+                    }
+                    else
+                    {
+                        isSimulationFinishedSuccesfully = false;
+                        break;
+                    }
+                }
+                else if (command.ToString() == "M")
+                {
+                    CommandResult commandResult = MoveForward(roverId, vehiclePositionProperty);
+                    if (commandResult.isCommandFinishedSuccessfully)
+                    {
+                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+                    }
+                    else
+                    {
+                        isSimulationFinishedSuccesfully = false;
+                        break;
+                    }
+                }
+            }
+
+            return new CommandResult
+            {
+                isCommandFinishedSuccessfully = isSimulationFinishedSuccesfully,
+                vehicleNewPositionProperty = isSimulationFinishedSuccesfully ? vehiclePositionProperty : storeObject
+            };
+        }
+
+        public CommandResult RunCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
+        {
+            CommandResult commandResult = SimulationForTheCommands(roverId, vehiclePositionProperty, commandList);
+
+            if (commandResult.isCommandFinishedSuccessfully)
+            {
+                RoverVehicle roverVehicle = surface.GetRoverWithId(roverId);
+                roverVehicle.vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+            }
+            return commandResult;
+        }
+
+        public CommandResult TurnLeft(VehiclePositionProperty vehiclePositionProperty)
+        {
+            if (vehiclePositionProperty.vehicleDirectionState > 0)
+            {
+
+                vehiclePositionProperty.vehicleDirectionState -= 1;
             }
             else
             {
-                vehicleDirectionState = GetDirectionCount() - 1;
+                vehiclePositionProperty.vehicleDirectionState = DirectionService.GetDirectionCount() - 1;
             }
-            return GetRoverPositionAndDirection();
+
+            return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
         }
 
-        public string TurnRight()
+        public CommandResult TurnRight(VehiclePositionProperty vehiclePositionProperty)
         {
-            vehicleDirectionState = (vehicleDirectionState + 1) % GetDirectionCount();
-            return GetRoverPositionAndDirection();
+            vehiclePositionProperty.vehicleDirectionState = (vehiclePositionProperty.vehicleDirectionState + 1) % DirectionService.GetDirectionCount();
+            return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
         }
 
-        public string MoveForward()
+        public CommandResult MoveForward(Guid roverId, VehiclePositionProperty vehiclePositionProperty)
         {
-            return GetRoverPositionAndDirection();
+            bool isCommandFinishedSuccessfully = false;
+            if (vehiclePositionProperty != null)
+            {
+                switch (vehiclePositionProperty.vehicleDirectionState)
+                {
+                    case 0:
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis + 1, roverId))
+                        {
+                            vehiclePositionProperty.locationOnTheYAxis += 1;
+                            isCommandFinishedSuccessfully = true;
+                        }
+                        break;
+                    case 1:
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis + 1, vehiclePositionProperty.locationOnTheYAxis, roverId))
+                        {
+                            vehiclePositionProperty.locationOnTheXAxis += 1;
+                            isCommandFinishedSuccessfully = true;
+                        }
+                        break;
+                    case 2:
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis - 1, roverId))
+                        {
+                            vehiclePositionProperty.locationOnTheYAxis -= 1;
+                            isCommandFinishedSuccessfully = true;
+                        }
+                        break;
+                    case 3:
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis - 1, vehiclePositionProperty.locationOnTheYAxis, roverId))
+                        {
+                            vehiclePositionProperty.locationOnTheXAxis -= 1;
+                            isCommandFinishedSuccessfully = true;
+                        }
+                        break;
+                    default:
+                        Console.WriteLine(Messages.UNDEFINED_DIRECTION_MESSAGE);
+                        break;
+                }
+            }
+
+            return new CommandResult { isCommandFinishedSuccessfully = isCommandFinishedSuccessfully, vehicleNewPositionProperty = vehiclePositionProperty };
         }
 
-        public int GetDirectionCount()
+        public static T Clone<T>(T source)
         {
-            return Enum.GetNames(typeof(RoverDirections)).Length;
+            var serialized = JsonConvert.SerializeObject(source);
+            return JsonConvert.DeserializeObject<T>(serialized);
         }
 
         public string GetRoverPositionAndDirection()
         {
-            return GetRoverPositionOnSurface() + " " + Enum.GetName(typeof(RoverDirections), vehicleDirectionState);
+            return GetRoverPositionOnSurface() + " " + Enum.GetName(typeof(DirectionService.RoverDirections), vehiclePositionProperty.vehicleDirectionState);
         }
 
         public string GetRoverPositionOnSurface()
         {
-            return locationOnTheXAxis + " " + locationOnTheYAxis;
+            return vehiclePositionProperty.locationOnTheXAxis + " " + vehiclePositionProperty.locationOnTheYAxis;
         }
-
-        public void SetSurfaceValue(int value)
-        {
-            surface.surfaceCode = value;
-        }
-
-       
 
     }
 }
