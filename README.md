@@ -1,6 +1,6 @@
 # MarsRoverControl
 
-Application can be start with .exe(MarsRoverControl/MarsRoverControl/bin/Release/netcoreapp3.1/MarsRoverControl.exe)
+Application could be start with .exe(MarsRoverControl/MarsRoverControl/bin/Release/netcoreapp3.1/MarsRoverControl.exe)
 
 This application has been developed for the control mechanisms of Rover vehicles traveling on the Mars surface.
 
