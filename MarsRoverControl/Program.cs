@@ -4,7 +4,6 @@ using MarsRoverControl.Interfaces;
 using MarsRoverControl.Models;
 using MarsRoverControl.Service;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 

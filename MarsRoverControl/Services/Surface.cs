@@ -11,14 +11,14 @@ namespace MarsRoverControl.Service
         public List<Location> SurfacePointList { get; set; }
         public List<RoverVehicle> RoverVehicleList { get; set; }
 
-        public void SurfaceBuilder(int pointCountOnXAxis, int pointCountOnYAxis)
+        public void SurfaceBuilder(int width, int height)
         {
             List<Location> surfacePoints = new List<Location>();
 
             //Generating surface points. Like x y coordinate system
-            for (var y = 0; y <= pointCountOnYAxis; y++)
+            for (var y = 0; y <= height; y++)
             {
-                for (var x = 0; x <= pointCountOnXAxis; x++)
+                for (var x = 0; x <= width; x++)
                 {
                     surfacePoints.Add(new Location(x, y));
                 }
@@ -73,25 +73,6 @@ namespace MarsRoverControl.Service
             }
 
             return !anyRoverExistInThisPosition;
-        }
-
-        /// <summary>
-        /// Finds the rover's current location.
-        /// </summary>
-        /// <param name="roverId"></param>
-        /// <returns>SurfacePoint object</returns>
-        public Location GetRoverLocation(Guid roverId)
-        {
-            Location location = null;
-            if (RoverVehicleList != null)
-            {
-                RoverVehicle roverVehicle = GetRoverWithId(roverId);
-                if (roverVehicle != null)
-                {
-                    location = GetLocation(roverVehicle.Position.Location.X, roverVehicle.Position.Location.Y);
-                }
-            }
-            return location;
         }
 
         /// <summary>
