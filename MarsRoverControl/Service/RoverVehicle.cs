@@ -1,4 +1,5 @@
-﻿using MarsRoverControl.Interfaces;
+﻿using MarsRoverControl.Consts;
+using MarsRoverControl.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,23 +67,19 @@ namespace MarsRoverControl.Service
                 switch (vehiclePositionProperty.vehicleDirectionState)
                 {
                     case 0:
-                        Console.WriteLine("Durum 0");
                         vehiclePositionProperty.locationOnTheYAxis += 1;
                         break;
                     case 1:
-                        Console.WriteLine("Durum 1");
                         vehiclePositionProperty.locationOnTheXAxis += 1;
                         break;
                     case 2:
-                        Console.WriteLine("Durum 2");
                         vehiclePositionProperty.locationOnTheYAxis -= 1;
                         break;
                     case 3:
-                        Console.WriteLine("Durum 3");
                         vehiclePositionProperty.locationOnTheXAxis -= 1;
                         break;
                     default:
-                        Console.WriteLine("Geçersiz durum.");
+                        Console.WriteLine(Messages.UNDEFINED_DIRECTION_MESSAGE);
                         break;
                 }
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarsRoverControl.Consts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,7 +49,7 @@ namespace MarsRoverControl.Service
 
                 if (enteringCompleted == false)
                 {
-                    Console.WriteLine("Hatalı giriş yaptınız tekrar deneyin.");
+                    Console.WriteLine(Messages.WRONG_INPUT);
                 }
 
             } while (enteringCompleted == false);
@@ -62,7 +63,7 @@ namespace MarsRoverControl.Service
         /// <returns>VehiclePositionProperty object</returns>
         public static VehiclePositionProperty GetRoverDefinition()
         {
-            Console.WriteLine("The rover will be positioned on the surface. Enter your parameters.");
+            Console.WriteLine(Messages.ENTER_ROVER_POSITION_MESSAGE);
             int xPosition = 0;
             int yPosition = 0;
             int directionState = -1;
@@ -111,7 +112,7 @@ namespace MarsRoverControl.Service
 
                 if (enteringCompleted == false)
                 {
-                    Console.WriteLine("Hatalı giriş yaptınız tekrar deneyin.");
+                    Console.WriteLine(Messages.WRONG_INPUT);
                 }
 
             } while (enteringCompleted == false);
@@ -125,7 +126,7 @@ namespace MarsRoverControl.Service
         /// <returns>Command character list</returns>
         public static List<char> GetRoverCommands()
         {
-            Console.WriteLine("Enter the movement commands for the rover.");
+            Console.WriteLine(Messages.ENTER_MOVEMENT_COMMANDS_MESSAGE);
 
             List<char> commandList = new List<char>();
 
@@ -161,7 +162,7 @@ namespace MarsRoverControl.Service
 
                 if (enteringCompleted == false)
                 {
-                    Console.WriteLine("Hatalı giriş yaptınız tekrar deneyin.");
+                    Console.WriteLine(Messages.WRONG_INPUT);
                 }
 
             } while (enteringCompleted == false);

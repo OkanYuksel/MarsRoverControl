@@ -95,7 +95,7 @@ namespace MarsRoverControl
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine("Status Code : InternalError. An error has been occured: Exception : " + ex.ToString());
             }
         }
 

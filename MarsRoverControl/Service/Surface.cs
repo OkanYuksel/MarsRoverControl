@@ -1,4 +1,5 @@
-﻿using MarsRoverControl.Interfaces;
+﻿using MarsRoverControl.Consts;
+using MarsRoverControl.Interfaces;
 using MarsRoverControl.Models;
 using Newtonsoft.Json;
 using System;
@@ -54,7 +55,7 @@ namespace MarsRoverControl.Service
         {
             if (GetSurfacePoint(_locationOnTheXAxis, _locationOnTheYAxis) == null)
             {
-                Console.WriteLine("Gitmek istediğin koordinat yüzey alanının dışında. x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
+                Console.WriteLine(Messages.OUTSIDE_SURFACE_AREA_MESSAGE + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
                 return false;
             }
 
@@ -66,6 +67,10 @@ namespace MarsRoverControl.Service
                 && x.vehiclePositionProperty.locationOnTheYAxis == _locationOnTheYAxis).FirstOrDefault();
 
                 anyRoverExistInThisPosition = (activeRoverListDifferentCurrentRover != null);
+                if (anyRoverExistInThisPosition)
+                {
+                    Console.WriteLine(Messages.DIFFERENT_VEHICLE_EXIST_ON_SURFACE_POINT + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
+                }
             }
 
             return !anyRoverExistInThisPosition;
@@ -232,21 +237,12 @@ namespace MarsRoverControl.Service
                             vehiclePositionProperty.locationOnTheYAxis += 1;
                             isCommandFinishedSuccessfully = true;
                         }
-                        else
-                        {
-                            //TODO error
-                        }
-
                         break;
                     case 1:
                         if (VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis + 1, vehiclePositionProperty.locationOnTheYAxis, roverId))
                         {
                             vehiclePositionProperty.locationOnTheXAxis += 1;
                             isCommandFinishedSuccessfully = true;
-                        }
-                        else
-                        {
-                            //TODO error
                         }
                         break;
                     case 2:
@@ -255,11 +251,6 @@ namespace MarsRoverControl.Service
                             vehiclePositionProperty.locationOnTheYAxis -= 1;
                             isCommandFinishedSuccessfully = true;
                         }
-                        else
-                        {
-                            //TODO error
-                        }
-
                         break;
                     case 3:
                         if (VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis - 1, vehiclePositionProperty.locationOnTheYAxis, roverId))
@@ -267,13 +258,9 @@ namespace MarsRoverControl.Service
                             vehiclePositionProperty.locationOnTheXAxis -= 1;
                             isCommandFinishedSuccessfully = true;
                         }
-                        else
-                        {
-                            //TODO error
-                        }
                         break;
                     default:
-                        Console.WriteLine("Geçersiz durum.");
+                        Console.WriteLine(Messages.UNDEFINED_DIRECTION_MESSAGE);
                         break;
                 }
             }
