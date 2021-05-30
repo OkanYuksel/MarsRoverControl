@@ -17,5 +17,6 @@ namespace MarsRoverControl.Consts
         public const string ROVER_SUCCESSFULLY_REGISTERED_MESSAGE = "This rover vehicle registered successfully on the surface.";
         public const string ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE = "Commands worked successfully.\nThe position and direction of the rover vehicle on the surface: ";
         public const string ROVER_COMMANDS_COMPLETED_UNSUCCESSFULLY_MESSAGE = "Commands could not be run. The rover vehicle has returned to its original position.\nThe position and direction of the rover vehicle on the surface: ";
+        public const string SURFACE_AREA_NOT_DEFINED_MESSAGE = "The rover cannot be positioned because the surface area is not created.";
     }
 }

@@ -28,7 +28,7 @@ namespace MarsRoverControl.Service
             int directionState = -1;
             foreach (RoverDirections roverDirection in (RoverDirections[])Enum.GetValues(typeof(RoverDirections)))
             {
-                if (direction.ToString() == GetDirectionName((int)roverDirection))
+                if (direction.ToString().ToUpper() == GetDirectionName((int)roverDirection))
                 {
                     directionState = (int)roverDirection;
                     break;
