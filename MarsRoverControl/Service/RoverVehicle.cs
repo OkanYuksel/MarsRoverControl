@@ -54,7 +54,7 @@ namespace MarsRoverControl.Service
             bool isSimulationFinishedSuccesfully = true;
             foreach (var command in commandList)
             {
-                if (command.ToString() == "L")
+                if (command.ToString() == InputManagerService.GetCommandName((int)InputManagerService.Commands.L))
                 {
                     CommandResult commandResult = TurnLeft(vehiclePositionProperty);
                     if (commandResult.isCommandFinishedSuccessfully)
@@ -67,7 +67,7 @@ namespace MarsRoverControl.Service
                         break;
                     }
                 }
-                else if (command.ToString() == "R")
+                else if (command.ToString() == InputManagerService.GetCommandName((int)InputManagerService.Commands.R))
                 {
                     CommandResult commandResult = TurnRight(vehiclePositionProperty);
                     if (commandResult.isCommandFinishedSuccessfully)
@@ -80,7 +80,7 @@ namespace MarsRoverControl.Service
                         break;
                     }
                 }
-                else if (command.ToString() == "M")
+                else if (command.ToString() == InputManagerService.GetCommandName((int)InputManagerService.Commands.M))
                 {
                     CommandResult commandResult = MoveForward(roverId, vehiclePositionProperty);
                     if (commandResult.isCommandFinishedSuccessfully)
