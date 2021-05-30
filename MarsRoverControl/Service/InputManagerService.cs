@@ -1,4 +1,5 @@
 ﻿using MarsRoverControl.Consts;
+using MarsRoverControl.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,6 @@ namespace MarsRoverControl.Service
 {
     public static class InputManagerService
     {
-        public enum Commands { L, R, M };
-
         /// <summary>
         /// Gets the width & height parameters to create surface from the user. And then doing validation for the parameters.
         /// </summary>
@@ -45,7 +44,14 @@ namespace MarsRoverControl.Service
 
                         if (controlForXSize && controlForYSize)
                         {
-                            enteringCompleted = true;
+                            if (xSize > 0 && ySize > 0)
+                            {
+                                enteringCompleted = true;
+                            }
+                            else
+                            {
+                                Console.WriteLine(Messages.INVALID_SURFACE_WIDTH_PARAMETERS_MESSAGE);
+                            }
                         }
                     }
                 }
@@ -100,10 +106,10 @@ namespace MarsRoverControl.Service
                         bool controlForDirection = Char.TryParse(fields.Last(), out directionValue);
                         if (controlForDirection)
                         {
-                            int state = DirectionService.GetDirectionState(directionValue);
-                            if (state > -1)
+                            int value = EnumerationHelper<RoverDirections>.GetEnumItemValue(directionValue);
+                            if (value > -1)
                             {
-                                directionState = state;
+                                directionState = value;
                             }
                         }
 
@@ -150,7 +156,7 @@ namespace MarsRoverControl.Service
                         bool isHasNonValidChar = false;
                         foreach (char command in fields)
                         {
-                            if (CommandValidation(command))
+                            if (EnumerationHelper<Commands>.EnumValidationWithChar(command))
                             {
                                 commandList.Add(command);
                             }
@@ -176,43 +182,5 @@ namespace MarsRoverControl.Service
 
             return commandList;
         }
-
-        /// <summary>
-        /// Validates the character used for the command.
-        /// </summary>
-        /// <param name="command"></param>
-        /// <returns>bool result</returns>
-        public static bool CommandValidation(char command)
-        {
-            foreach (Commands commandTypeValue in (Commands[])Enum.GetValues(typeof(Commands)))
-            {
-                if (command.ToString().ToUpper() == GetCommandName((int)commandTypeValue))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Finds the name of the commandTypeValue that comes as a parameter.
-        /// </summary>
-        /// <param name="commandTypeValue"></param>
-        /// <returns> string command name</returns>
-        public static string GetCommandName(int commandTypeValue)
-        {
-            string directionName = "";
-            if (commandTypeValue < GetCommandCount())
-            {
-                directionName = Enum.GetName(typeof(Commands), commandTypeValue);
-            }
-            return directionName;
-        }
-
-        public static int GetCommandCount()
-        {
-            return Enum.GetNames(typeof(Commands)).Length;
-        }
-
     }
 }
