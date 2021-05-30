@@ -12,7 +12,7 @@ namespace MarsRoverControl.Consts
         public const string VEHICLE_CHECK_ON_SURFACE_POINT_MESSAGE = "There is another rover vehicle at the coordinate you want to go.";
         public const string UNDEFINED_DIRECTION_MESSAGE = "An undefined direction setted for the vehicle.";
         public const string ENTER_MOVEMENT_COMMANDS_MESSAGE = "\nEnter the movement commands for the rover.\n(You must enter commands without any spaces between them. You can use these commands:L,R,M. For example:MLRLRMLR)";
-        public const string ENTER_ROVER_POSITION_MESSAGE = "\nThe rover will be positioned on the surface.\nEnter the coordinates and direction you want to position, with a space between them.\n(For example :1 3 W)";
+        public const string ENTER_ROVER_POSITION_MESSAGE = "\nThe rover will be positioned on the surface.\nEnter the coordinates and direction you want to position (valid directions : N, E, S, W), with a space between them.\n(For example :1 3 W)";
         public const string ROVER_HAS_BEEN_REGISTERED_MESSAGE = "This rover vehicle has already been registered.";
         public const string ROVER_SUCCESSFULLY_REGISTERED_MESSAGE = "This rover vehicle registered successfully on the surface.";
         public const string ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE = "Commands worked successfully.\nThe position and direction of the rover vehicle on the surface: ";
