@@ -17,7 +17,7 @@ namespace MarsRoverControl
             try
             {
                 //Application starting with start message. 
-                Console.WriteLine(Messages.START_MESSAGE);
+                Console.WriteLine(Messages.StartMessage);
 
                 //Asking surface size to user
                 SurfaceProperty surfaceProperty = InputManagerService.GetTheSurfaceSize();
@@ -28,11 +28,11 @@ namespace MarsRoverControl
 
                 surface.SurfaceBuilder(surfaceProperty.width, surfaceProperty.height);
 
-                for (int i = 0; i < Settings.howManyRoverWillResearch; i++)
+                for (int i = 0; i < Settings.HowManyRoverWillResearch; i++)
                 {
                     if (i != 0)
                     {
-                        Console.WriteLine(Messages.ANOTHER_ROVER_SPAWN_MESSAGE);
+                        Console.WriteLine(Messages.AnotherRoverSpawnMessage);
                     }
 
                     CreateRoverOnTheSurface(surface);
@@ -91,11 +91,11 @@ namespace MarsRoverControl
                 if (commandResultForRover.isCommandFinishedSuccessfully)
                 {
                     firstRoverMovedSuccessfully = true;
-                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_SUCCESSFULLY_MESSAGE + commandResultForRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + EnumerationHelper<RoverDirections>.GetEnumItemName(commandResultForRover.vehicleNewPositionProperty.vehicleDirectionState));
+                    Console.WriteLine(Messages.RoverCommandsCompletedSuccessfullyMessage + commandResultForRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + EnumerationHelper<Directions>.GetEnumItemName(commandResultForRover.vehicleNewPositionProperty.vehicleDirectionState));
                 }
                 else
                 {
-                    Console.WriteLine(Messages.ROVER_COMMANDS_COMPLETED_UNSUCCESSFULLY_MESSAGE + commandResultForRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + EnumerationHelper<RoverDirections>.GetEnumItemName(commandResultForRover.vehicleNewPositionProperty.vehicleDirectionState));
+                    Console.WriteLine(Messages.RoverCommandsCompletedUnsuccessfullyMessage + commandResultForRover.vehicleNewPositionProperty.locationOnTheXAxis + " " + commandResultForRover.vehicleNewPositionProperty.locationOnTheYAxis + " " + EnumerationHelper<Directions>.GetEnumItemName(commandResultForRover.vehicleNewPositionProperty.vehicleDirectionState));
                 }
             } while (firstRoverMovedSuccessfully == false);
         }

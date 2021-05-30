@@ -50,7 +50,7 @@ namespace MarsRoverControl.Service
                             }
                             else
                             {
-                                Console.WriteLine(Messages.INVALID_SURFACE_WIDTH_PARAMETERS_MESSAGE);
+                                Console.WriteLine(Messages.InvalidSurfaceWidthParametersMessage);
                             }
                         }
                     }
@@ -58,7 +58,7 @@ namespace MarsRoverControl.Service
 
                 if (enteringCompleted == false)
                 {
-                    Console.WriteLine(Messages.INCORRECT_INPUT_MESSAGE);
+                    Console.WriteLine(Messages.IncorrectInputMessage);
                 }
 
             } while (enteringCompleted == false);
@@ -72,7 +72,7 @@ namespace MarsRoverControl.Service
         /// <returns>VehiclePositionProperty object</returns>
         public static VehiclePositionProperty GetRoverDefinition()
         {
-            Console.WriteLine(Messages.ENTER_ROVER_POSITION_MESSAGE);
+            Console.WriteLine(Messages.EnterRoverPositionMesage);
             int xPosition = 0;
             int yPosition = 0;
             int directionState = -1;
@@ -106,7 +106,7 @@ namespace MarsRoverControl.Service
                         bool controlForDirection = Char.TryParse(fields.Last(), out directionValue);
                         if (controlForDirection)
                         {
-                            int value = EnumerationHelper<RoverDirections>.GetEnumItemValue(directionValue);
+                            int value = EnumerationHelper<Directions>.GetEnumItemValue(directionValue);
                             if (value > -1)
                             {
                                 directionState = value;
@@ -123,7 +123,7 @@ namespace MarsRoverControl.Service
 
                 if (enteringCompleted == false)
                 {
-                    Console.WriteLine(Messages.INCORRECT_INPUT_MESSAGE);
+                    Console.WriteLine(Messages.IncorrectInputMessage);
                 }
 
             } while (enteringCompleted == false);
@@ -137,7 +137,7 @@ namespace MarsRoverControl.Service
         /// <returns>Command character list</returns>
         public static List<char> GetRoverCommands()
         {
-            Console.WriteLine(Messages.ENTER_MOVEMENT_COMMANDS_MESSAGE);
+            Console.WriteLine(Messages.EnterMovementCommandsMessage);
 
             List<char> commandList = new List<char>();
 
@@ -175,7 +175,7 @@ namespace MarsRoverControl.Service
 
                 if (enteringCompleted == false)
                 {
-                    Console.WriteLine(Messages.INCORRECT_INPUT_MESSAGE);
+                    Console.WriteLine(Messages.IncorrectInputMessage);
                 }
 
             } while (enteringCompleted == false);

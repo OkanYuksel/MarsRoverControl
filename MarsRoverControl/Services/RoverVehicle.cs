@@ -21,7 +21,7 @@ namespace MarsRoverControl.Service
 
             if (_surface == null)
             {
-                Console.WriteLine(Messages.SURFACE_AREA_NOT_DEFINED_MESSAGE);
+                Console.WriteLine(Messages.SurfaceAreaNotDefinedMessage);
                 isActive = false;
             }
 
@@ -140,7 +140,7 @@ namespace MarsRoverControl.Service
             }
             else
             {
-                vehiclePositionProperty.vehicleDirectionState = EnumerationHelper<RoverDirections>.GetEnumItemsCount() - 1;
+                vehiclePositionProperty.vehicleDirectionState = EnumerationHelper<Directions>.GetEnumItemsCount() - 1;
             }
 
             return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
@@ -153,7 +153,7 @@ namespace MarsRoverControl.Service
         /// <returns>CommandResult object</returns>
         public CommandResult TurnRight(VehiclePositionProperty vehiclePositionProperty)
         {
-            vehiclePositionProperty.vehicleDirectionState = (vehiclePositionProperty.vehicleDirectionState + 1) % EnumerationHelper<RoverDirections>.GetEnumItemsCount();
+            vehiclePositionProperty.vehicleDirectionState = (vehiclePositionProperty.vehicleDirectionState + 1) % EnumerationHelper<Directions>.GetEnumItemsCount();
             return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
         }
 
@@ -200,7 +200,7 @@ namespace MarsRoverControl.Service
                         }
                         break;
                     default:
-                        Console.WriteLine(Messages.UNDEFINED_DIRECTION_MESSAGE);
+                        Console.WriteLine(Messages.UndefinedDirectionMessage);
                         break;
                 }
             }
@@ -210,7 +210,7 @@ namespace MarsRoverControl.Service
 
         public string GetRoverPositionAndDirection()
         {
-            return GetRoverPositionOnSurface() + " " + Enum.GetName(typeof(RoverDirections), vehiclePositionProperty.vehicleDirectionState);
+            return GetRoverPositionOnSurface() + " " + Enum.GetName(typeof(Directions), vehiclePositionProperty.vehicleDirectionState);
         }
 
         public string GetRoverPositionOnSurface()

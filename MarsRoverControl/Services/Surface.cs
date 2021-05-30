@@ -16,9 +16,9 @@ namespace MarsRoverControl.Service
             List<SurfacePoint> surfacePoints = new List<SurfacePoint>();
 
             //Generating surface points. Like x y coordinate system
-            for (var y = 0; y <= _pointCountOnYAxis; y += 1)
+            for (var y = 0; y <= _pointCountOnYAxis; y++)
             {
-                for (var x = 0; x <= _pointCountOnXAxis; x += 1)
+                for (var x = 0; x <= _pointCountOnXAxis; x++)
                 {
                     surfacePoints.Add(new SurfacePoint(x, y));
                 }
@@ -53,7 +53,7 @@ namespace MarsRoverControl.Service
         {
             if (GetSurfacePoint(_locationOnTheXAxis, _locationOnTheYAxis) == null)
             {
-                Console.WriteLine(Messages.OUTSIDE_SURFACE_AREA_MESSAGE + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
+                Console.WriteLine(Messages.OutsideSurfaceAreaMessage + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
                 return false;
             }
 
@@ -67,7 +67,7 @@ namespace MarsRoverControl.Service
                 anyRoverExistInThisPosition = (activeRoverListDifferentCurrentRover != null);
                 if (anyRoverExistInThisPosition)
                 {
-                    Console.WriteLine(Messages.VEHICLE_CHECK_ON_SURFACE_POINT_MESSAGE + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
+                    Console.WriteLine(Messages.VehicleCheckOnSurfacePointMessage + " x : " + _locationOnTheXAxis + " y : " + _locationOnTheYAxis);
                 }
             }
 
@@ -111,11 +111,11 @@ namespace MarsRoverControl.Service
                 //rover can be registered.
                 roverVehicleList.Add(roverVehicle);
                 isOperationCompletedSuccessfully = true;
-                Console.WriteLine(Messages.ROVER_SUCCESSFULLY_REGISTERED_MESSAGE);
+                Console.WriteLine(Messages.RoverSuccessfullyRegisteredMessage);
             }
             else
             {
-                Console.WriteLine(Messages.ROVER_HAS_BEEN_REGISTERED_MESSAGE);
+                Console.WriteLine(Messages.RoverHasBeenRegisteredMessage);
             }
 
             return isOperationCompletedSuccessfully;
