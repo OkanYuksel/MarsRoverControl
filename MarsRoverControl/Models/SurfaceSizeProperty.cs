@@ -6,7 +6,7 @@ namespace MarsRoverControl.Service
 {
    public class SurfaceSizeProperty
     {
-        public int width { get; set; }
-        public int height { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
     }
 }

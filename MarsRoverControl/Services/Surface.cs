@@ -8,19 +8,19 @@ namespace MarsRoverControl.Service
 {
     public class Surface : ISurface
     {
-        public List<SurfacePoint> surfacePointList { get; set; }
+        public List<Position> surfacePointList { get; set; }
         public List<RoverVehicle> roverVehicleList { get; set; }
 
         public void SurfaceBuilder(int pointCountOnXAxis, int pointCountOnYAxis)
         {
-            List<SurfacePoint> surfacePoints = new List<SurfacePoint>();
+            List<Position> surfacePoints = new List<Position>();
 
             //Generating surface points. Like x y coordinate system
             for (var y = 0; y <= pointCountOnYAxis; y++)
             {
                 for (var x = 0; x <= pointCountOnXAxis; x++)
                 {
-                    surfacePoints.Add(new SurfacePoint(x, y));
+                    surfacePoints.Add(new Position(x, y));
                 }
             }
 
@@ -30,24 +30,25 @@ namespace MarsRoverControl.Service
         /// <summary>
         /// This method finds the surface point whose coordinates are given.
         /// </summary>
-        /// <param name="_locationOnTheXAxis"></param>
-        /// <param name="_locationOnTheYAxis"></param>
+        /// <param name="locationOnTheXAxis"></param>
+        /// <param name="locationOnTheYAxis"></param>
         /// <returns>SurfacePoint object</returns>
-        public SurfacePoint GetSurfacePoint(int locationOnTheXAxis, int locationOnTheYAxis)
+        public Position GetSurfacePoint(int locationOnTheXAxis, int locationOnTheYAxis)
         {
             if (this.surfacePointList == null)
             {
                 return null;
             }
 
-            return this.surfacePointList.Where(x => x.locationOnTheXAxis == locationOnTheXAxis && x.locationOnTheYAxis == locationOnTheYAxis).FirstOrDefault();
+            return this.surfacePointList.Where(sp => sp.X == locationOnTheXAxis && sp.Y == locationOnTheYAxis).FirstOrDefault();
         }
 
         /// <summary>
         /// It checks the suitability of the given point to move.
         /// </summary>
-        /// <param name="_locationOnTheXAxis"></param>
-        /// <param name="_locationOnTheYAxis"></param>
+        /// <param name="locationOnTheXAxis"></param>
+        /// <param name="locationOnTheYAxis"></param>
+        /// /// <param name="roverId"></param>
         /// <returns>bool result</returns>
         public bool VehicleMovePermissionControlForSurfacePoint(int locationOnTheXAxis, int locationOnTheYAxis, Guid roverId)
         {
@@ -61,8 +62,8 @@ namespace MarsRoverControl.Service
 
             if (roverVehicleList != null)
             {
-                RoverVehicle activeRoverListDifferentCurrentRover = roverVehicleList.Where(x => x.roverId != roverId && x.vehiclePositionProperty.locationOnTheXAxis == locationOnTheXAxis
-                && x.vehiclePositionProperty.locationOnTheYAxis == locationOnTheYAxis).FirstOrDefault();
+                RoverVehicle activeRoverListDifferentCurrentRover = roverVehicleList.Where(x => x.roverId != roverId && x.vehiclePositionProperty.PositionOnSurface.X == locationOnTheXAxis
+                && x.vehiclePositionProperty.PositionOnSurface.Y == locationOnTheYAxis).FirstOrDefault();
 
                 anyRoverExistInThisPosition = (activeRoverListDifferentCurrentRover != null);
                 if (anyRoverExistInThisPosition)
@@ -79,15 +80,15 @@ namespace MarsRoverControl.Service
         /// </summary>
         /// <param name="roverId"></param>
         /// <returns>SurfacePoint object</returns>
-        public SurfacePoint GetRoverLocation(Guid roverId)
+        public Position GetRoverLocation(Guid roverId)
         {
-            SurfacePoint surfacePoint = null;
+            Position surfacePoint = null;
             if (roverVehicleList != null)
             {
                 RoverVehicle roverVehicle = GetRoverWithId(roverId);
                 if (roverVehicle != null)
                 {
-                    surfacePoint = GetSurfacePoint(roverVehicle.vehiclePositionProperty.locationOnTheXAxis, roverVehicle.vehiclePositionProperty.locationOnTheYAxis);
+                    surfacePoint = GetSurfacePoint(roverVehicle.vehiclePositionProperty.PositionOnSurface.X, roverVehicle.vehiclePositionProperty.PositionOnSurface.Y);
                 }
             }
             return surfacePoint;

@@ -63,7 +63,7 @@ namespace MarsRoverControl.Service
 
             } while (enteringCompleted == false);
 
-            return new SurfaceSizeProperty { width = xSize, height = ySize };
+            return new SurfaceSizeProperty { Width = xSize, Height = ySize };
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace MarsRoverControl.Service
 
             } while (enteringCompleted == false);
 
-            return new VehiclePositionProperty { locationOnTheXAxis = xPosition, locationOnTheYAxis = yPosition, vehicleDirectionState = directionState };
+            return new VehiclePositionProperty { PositionOnSurface = new Position (xPosition, yPosition), VehicleDirectionState = directionState };
         }
 
         /// <summary>

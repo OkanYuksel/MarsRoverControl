@@ -36,9 +36,8 @@ namespace MarsRoverControl.Service
             if (isActive)
             {
                 vehiclePositionProperty = new VehiclePositionProperty();
-                vehiclePositionProperty.locationOnTheXAxis = locationOnTheXAxis;
-                vehiclePositionProperty.locationOnTheYAxis = locationOnTheYAxis;
-                vehiclePositionProperty.vehicleDirectionState = vehicleDirectionState;
+                vehiclePositionProperty.PositionOnSurface = new Position(locationOnTheXAxis, locationOnTheYAxis);
+                vehiclePositionProperty.VehicleDirectionState = vehicleDirectionState;
                 surface = definedSurface;
                 surface.VehicleRegistrationToSurface(this);
             }
@@ -61,9 +60,9 @@ namespace MarsRoverControl.Service
                 if (command.ToString() == EnumerationHelper<Command>.GetEnumItemName((int)Command.L))
                 {
                     CommandResult commandResult = TurnLeft(vehiclePositionProperty);
-                    if (commandResult.isCommandFinishedSuccessfully)
+                    if (commandResult.IsCommandFinishedSuccessfully)
                     {
-                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+                        vehiclePositionProperty = commandResult.VehicleNewPositionProperty;
                     }
                     else
                     {
@@ -74,9 +73,9 @@ namespace MarsRoverControl.Service
                 else if (command.ToString() == EnumerationHelper<Command>.GetEnumItemName((int)Command.R))
                 {
                     CommandResult commandResult = TurnRight(vehiclePositionProperty);
-                    if (commandResult.isCommandFinishedSuccessfully)
+                    if (commandResult.IsCommandFinishedSuccessfully)
                     {
-                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+                        vehiclePositionProperty = commandResult.VehicleNewPositionProperty;
                     }
                     else
                     {
@@ -87,9 +86,9 @@ namespace MarsRoverControl.Service
                 else if (command.ToString() == EnumerationHelper<Command>.GetEnumItemName((int)Command.M))
                 {
                     CommandResult commandResult = MoveForward(roverId, vehiclePositionProperty);
-                    if (commandResult.isCommandFinishedSuccessfully)
+                    if (commandResult.IsCommandFinishedSuccessfully)
                     {
-                        vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+                        vehiclePositionProperty = commandResult.VehicleNewPositionProperty;
                     }
                     else
                     {
@@ -101,8 +100,8 @@ namespace MarsRoverControl.Service
 
             return new CommandResult
             {
-                isCommandFinishedSuccessfully = isSimulationFinishedSuccesfully,
-                vehicleNewPositionProperty = isSimulationFinishedSuccesfully ? vehiclePositionProperty : storeObject
+                IsCommandFinishedSuccessfully = isSimulationFinishedSuccesfully,
+                VehicleNewPositionProperty = isSimulationFinishedSuccesfully ? vehiclePositionProperty : storeObject
             };
         }
 
@@ -117,11 +116,11 @@ namespace MarsRoverControl.Service
         {
             CommandResult commandResult = SimulationForTheCommands(roverId, vehiclePositionProperty, commandList);
 
-            if (commandResult.isCommandFinishedSuccessfully)
+            if (commandResult.IsCommandFinishedSuccessfully)
             {
                 //New coordinates setting to the rover vehicle.
                 RoverVehicle roverVehicle = surface.GetRoverWithId(roverId);
-                roverVehicle.vehiclePositionProperty = commandResult.vehicleNewPositionProperty;
+                roverVehicle.vehiclePositionProperty = commandResult.VehicleNewPositionProperty;
             }
             return commandResult;
         }
@@ -133,17 +132,17 @@ namespace MarsRoverControl.Service
         /// <returns>CommandResult object</returns>
         public CommandResult TurnLeft(VehiclePositionProperty vehiclePositionProperty)
         {
-            if (vehiclePositionProperty.vehicleDirectionState > 0)
+            if (vehiclePositionProperty.VehicleDirectionState > 0)
             {
 
-                vehiclePositionProperty.vehicleDirectionState -= 1;
+                vehiclePositionProperty.VehicleDirectionState -= 1;
             }
             else
             {
-                vehiclePositionProperty.vehicleDirectionState = EnumerationHelper<Direction>.GetEnumItemsCount() - 1;
+                vehiclePositionProperty.VehicleDirectionState = EnumerationHelper<Direction>.GetEnumItemsCount() - 1;
             }
 
-            return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
+            return new CommandResult { IsCommandFinishedSuccessfully = true, VehicleNewPositionProperty = vehiclePositionProperty };
         }
 
         /// <summary>
@@ -153,8 +152,8 @@ namespace MarsRoverControl.Service
         /// <returns>CommandResult object</returns>
         public CommandResult TurnRight(VehiclePositionProperty vehiclePositionProperty)
         {
-            vehiclePositionProperty.vehicleDirectionState = (vehiclePositionProperty.vehicleDirectionState + 1) % EnumerationHelper<Direction>.GetEnumItemsCount();
-            return new CommandResult { isCommandFinishedSuccessfully = true, vehicleNewPositionProperty = vehiclePositionProperty };
+            vehiclePositionProperty.VehicleDirectionState = (vehiclePositionProperty.VehicleDirectionState + 1) % EnumerationHelper<Direction>.GetEnumItemsCount();
+            return new CommandResult { IsCommandFinishedSuccessfully = true, VehicleNewPositionProperty = vehiclePositionProperty };
         }
 
         /// <summary>
@@ -169,33 +168,33 @@ namespace MarsRoverControl.Service
             if (vehiclePositionProperty != null)
             {
                 //VehicleMovePermissionControlForSurfacePoint method should be run. Beceause it checks the suitability of the given point to move. For example surface size, any different vehicle..
-                switch (vehiclePositionProperty.vehicleDirectionState)
+                switch (vehiclePositionProperty.VehicleDirectionState)
                 {
                     case 0:
-                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis + 1, roverId))
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.PositionOnSurface.X, vehiclePositionProperty.PositionOnSurface.Y + 1, roverId))
                         {
-                            vehiclePositionProperty.locationOnTheYAxis += 1;
+                            vehiclePositionProperty.PositionOnSurface.Y++;
                             isCommandFinishedSuccessfully = true;
                         }
                         break;
                     case 1:
-                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis + 1, vehiclePositionProperty.locationOnTheYAxis, roverId))
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.PositionOnSurface.X + 1, vehiclePositionProperty.PositionOnSurface.Y, roverId))
                         {
-                            vehiclePositionProperty.locationOnTheXAxis += 1;
+                            vehiclePositionProperty.PositionOnSurface.X++;
                             isCommandFinishedSuccessfully = true;
                         }
                         break;
                     case 2:
-                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis, vehiclePositionProperty.locationOnTheYAxis - 1, roverId))
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.PositionOnSurface.X, vehiclePositionProperty.PositionOnSurface.Y - 1, roverId))
                         {
-                            vehiclePositionProperty.locationOnTheYAxis -= 1;
+                            vehiclePositionProperty.PositionOnSurface.Y--;
                             isCommandFinishedSuccessfully = true;
                         }
                         break;
                     case 3:
-                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.locationOnTheXAxis - 1, vehiclePositionProperty.locationOnTheYAxis, roverId))
+                        if (surface.VehicleMovePermissionControlForSurfacePoint(vehiclePositionProperty.PositionOnSurface.X - 1, vehiclePositionProperty.PositionOnSurface.Y, roverId))
                         {
-                            vehiclePositionProperty.locationOnTheXAxis -= 1;
+                            vehiclePositionProperty.PositionOnSurface.X--;
                             isCommandFinishedSuccessfully = true;
                         }
                         break;
@@ -205,17 +204,12 @@ namespace MarsRoverControl.Service
                 }
             }
 
-            return new CommandResult { isCommandFinishedSuccessfully = isCommandFinishedSuccessfully, vehicleNewPositionProperty = vehiclePositionProperty };
-        }
-
-        public string GetRoverPositionAndDirection()
-        {
-            return GetRoverPositionOnSurface() + " " + Enum.GetName(typeof(Direction), vehiclePositionProperty.vehicleDirectionState);
+            return new CommandResult { IsCommandFinishedSuccessfully = isCommandFinishedSuccessfully, VehicleNewPositionProperty = vehiclePositionProperty };
         }
 
         public string GetRoverPositionOnSurface()
         {
-            return vehiclePositionProperty.locationOnTheXAxis + " " + vehiclePositionProperty.locationOnTheYAxis;
+            return vehiclePositionProperty.PositionOnSurface.X + " " + vehiclePositionProperty.PositionOnSurface.Y;
         }
 
     }

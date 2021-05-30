@@ -6,9 +6,8 @@ namespace MarsRoverControl.Service
 {
    public class VehiclePositionProperty
     {
-        public int locationOnTheXAxis { get; set; }
-        public int locationOnTheYAxis { get; set; }
-        public int vehicleDirectionState { get; set; }
+        public Position PositionOnSurface { get; set; }
+        public int VehicleDirectionState { get; set; }
 
         public VehiclePositionProperty Clone()
         {
