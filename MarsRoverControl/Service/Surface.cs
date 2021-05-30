@@ -93,7 +93,6 @@ namespace MarsRoverControl.Service
             return surfacePoint;
         }
 
-
         /// <summary>
         /// This mothod using for defining vehicle on the surface. In this method checks the vehicle has been registered before.
         /// </summary>
@@ -107,7 +106,7 @@ namespace MarsRoverControl.Service
                 roverVehicleList = new List<RoverVehicle>();
             }
 
-            if (roverVehicleList.Where(x => x.roverId == roverVehicle.roverId).FirstOrDefault() == null)
+            if (GetRoverWithId(roverVehicle.roverId) == null)
             {
                 //rover can be registered.
                 roverVehicleList.Add(roverVehicle);
@@ -129,6 +128,10 @@ namespace MarsRoverControl.Service
         /// <returns>RoverVehicle object</returns>
         public RoverVehicle GetRoverWithId(Guid roverId)
         {
+            if (roverVehicleList == null)
+            {
+                return null;
+            }
             RoverVehicle roverVehicle = roverVehicleList.Where(x => x.roverId == roverId).FirstOrDefault();
             return roverVehicle;
         }
