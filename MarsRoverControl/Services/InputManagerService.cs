@@ -12,7 +12,7 @@ namespace MarsRoverControl.Service
         /// Gets the width & height parameters to create surface from the user. And then doing validation for the parameters.
         /// </summary>
         /// <returns>SurfaceProperty object</returns>
-        public static SurfaceSizeProperty GetTheSurfaceSize()
+        public static SurfaceSize GetTheSurfaceSize()
         {
             int xSize = 0;
             int ySize = 0;
@@ -63,14 +63,14 @@ namespace MarsRoverControl.Service
 
             } while (enteringCompleted == false);
 
-            return new SurfaceSizeProperty { Width = xSize, Height = ySize };
+            return new SurfaceSize { Width = xSize, Height = ySize };
         }
 
         /// <summary>
         /// Gets the initial positioning parameters of the rover vehicle from the user.
         /// </summary>
-        /// <returns>VehiclePositionProperty object</returns>
-        public static VehiclePositionProperty GetRoverDefinition()
+        /// <returns>VehiclePosition object</returns>
+        public static VehiclePosition GetRoverDefinition()
         {
             Console.WriteLine(Messages.EnterRoverPositionMesage);
             int xPosition = 0;
@@ -128,7 +128,7 @@ namespace MarsRoverControl.Service
 
             } while (enteringCompleted == false);
 
-            return new VehiclePositionProperty { Location = new Location (xPosition, yPosition), VehicleDirection = EnumerationHelper<Direction>.GetEnumObjectByValue(directionState) };
+            return new VehiclePosition { Location = new Location (xPosition, yPosition), VehicleDirection = EnumerationHelper<Direction>.GetEnumObjectByValue(directionState) };
         }
 
         /// <summary>

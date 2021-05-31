@@ -10,7 +10,7 @@ namespace MarsRoverControl.Service
 {
     public class RoverVehicle : IRoverVehicle
     {
-        public VehiclePositionProperty Position { get; set; }
+        public VehiclePosition Position { get; set; }
         public ISurface Surface { get; set; }
         public Guid RoverId { get; set; }
         public bool IsActive { get; set; }
@@ -35,7 +35,7 @@ namespace MarsRoverControl.Service
 
             if (IsActive)
             {
-                Position = new VehiclePositionProperty();
+                Position = new VehiclePosition();
                 Position.Location = new Location(locationOnTheXAxis, locationOnTheYAxis);
                 Position.VehicleDirection = vehicleDirectionState;
                 Surface = definedSurface;
@@ -47,22 +47,22 @@ namespace MarsRoverControl.Service
         /// It simulates the commands that comes as a parameter and checks for the problem.
         /// </summary>
         /// <param name="roverId"></param>
-        /// <param name="vehiclePositionProperty"></param>
+        /// <param name="vehiclePosition"></param>
         /// <param name="commandList"></param>
         /// <returns>CommandResult object</returns>
-        public CommandResult SimulationForTheCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
+        public CommandResult SimulationForTheCommands(Guid roverId, VehiclePosition vehiclePosition, List<char> commandList)
         {
-            VehiclePositionProperty storeObject = vehiclePositionProperty.Clone();
+            VehiclePosition storeObject = vehiclePosition.Clone();
 
             bool isSimulationFinishedSuccesfully = true;
             foreach (var command in commandList)
             {
                 if (command.ToString() == EnumerationHelper<Command>.GetEnumItemName((int)Command.L))
                 {
-                    CommandResult commandResult = TurnLeft(vehiclePositionProperty);
+                    CommandResult commandResult = TurnLeft(vehiclePosition);
                     if (commandResult.Success)
                     {
-                        vehiclePositionProperty = commandResult.VehiclePosition;
+                        vehiclePosition = commandResult.VehiclePosition;
                     }
                     else
                     {
@@ -72,10 +72,10 @@ namespace MarsRoverControl.Service
                 }
                 else if (command.ToString() == EnumerationHelper<Command>.GetEnumItemName((int)Command.R))
                 {
-                    CommandResult commandResult = TurnRight(vehiclePositionProperty);
+                    CommandResult commandResult = TurnRight(vehiclePosition);
                     if (commandResult.Success)
                     {
-                        vehiclePositionProperty = commandResult.VehiclePosition;
+                        vehiclePosition = commandResult.VehiclePosition;
                     }
                     else
                     {
@@ -85,10 +85,10 @@ namespace MarsRoverControl.Service
                 }
                 else if (command.ToString() == EnumerationHelper<Command>.GetEnumItemName((int)Command.M))
                 {
-                    CommandResult commandResult = MoveForward(roverId, vehiclePositionProperty);
+                    CommandResult commandResult = MoveForward(roverId, vehiclePosition);
                     if (commandResult.Success)
                     {
-                        vehiclePositionProperty = commandResult.VehiclePosition;
+                        vehiclePosition = commandResult.VehiclePosition;
                     }
                     else
                     {
@@ -101,7 +101,7 @@ namespace MarsRoverControl.Service
             return new CommandResult
             {
                 Success = isSimulationFinishedSuccesfully,
-                VehiclePosition = isSimulationFinishedSuccesfully ? vehiclePositionProperty : storeObject
+                VehiclePosition = isSimulationFinishedSuccesfully ? vehiclePosition : storeObject
             };
         }
 
@@ -109,12 +109,12 @@ namespace MarsRoverControl.Service
         /// If there is no problem with the simulated commands, it moves the vehicle to the specified coordinate.
         /// </summary>
         /// <param name="roverId"></param>
-        /// <param name="vehiclePositionProperty"></param>
+        /// <param name="vehiclePosition"></param>
         /// <param name="commandList"></param>
         /// <returns></returns>
-        public CommandResult RunCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList)
+        public CommandResult RunCommands(Guid roverId, VehiclePosition vehiclePosition, List<char> commandList)
         {
-            CommandResult commandResult = SimulationForTheCommands(roverId, vehiclePositionProperty, commandList);
+            CommandResult commandResult = SimulationForTheCommands(roverId, vehiclePosition, commandList);
 
             if (commandResult.Success)
             {
@@ -130,7 +130,7 @@ namespace MarsRoverControl.Service
         /// </summary>
         /// <param name="position"></param>
         /// <returns>CommandResult object</returns>
-        public CommandResult TurnLeft(VehiclePositionProperty position)
+        public CommandResult TurnLeft(VehiclePosition position)
         {
             if (position.VehicleDirection > 0)
             {
@@ -150,7 +150,7 @@ namespace MarsRoverControl.Service
         /// </summary>
         /// <param name="position"></param>
         /// <returns>CommandResult object</returns>
-        public CommandResult TurnRight(VehiclePositionProperty position)
+        public CommandResult TurnRight(VehiclePosition position)
         {
             position.VehicleDirection = EnumerationHelper<Direction>.GetEnumObjectByValue(((int)position.VehicleDirection + 1) % EnumerationHelper<Direction>.GetEnumItemsCount());
             return new CommandResult { Success = true, VehiclePosition = position };
@@ -162,7 +162,7 @@ namespace MarsRoverControl.Service
         /// <param name="roverId"></param>
         /// <param name="position"></param>
         /// <returns>CommandResult object</returns>
-        public CommandResult MoveForward(Guid roverId, VehiclePositionProperty position)
+        public CommandResult MoveForward(Guid roverId, VehiclePosition position)
         {
             bool isCommandFinishedSuccessfully = false;
             if (position != null)
