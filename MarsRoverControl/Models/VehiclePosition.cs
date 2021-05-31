@@ -2,14 +2,14 @@
 
 namespace MarsRoverControl.Service
 {
-   public class VehiclePositionProperty
+   public class VehiclePosition
     {
         public Location Location { get; set; }
         public Direction VehicleDirection { get; set; }
 
-        public VehiclePositionProperty Clone()
+        public VehiclePosition Clone()
         {
-            return (VehiclePositionProperty)this.MemberwiseClone();
+            return (VehiclePosition)this.MemberwiseClone();
         }
     }
 }

@@ -19,13 +19,13 @@ namespace MarsRoverControl
                 Console.WriteLine(Messages.StartMessage);
 
                 //Asking surface size to user
-                SurfaceSizeProperty surfaceSizeProperty = InputManagerService.GetTheSurfaceSize();
+                SurfaceSize surfaceSize = InputManagerService.GetTheSurfaceSize();
 
                 //Generating singleton surface service with the parameters entered by the user. 
                 ServiceProvider serviceProvider = InjectionServiceProvider.Builder();
                 ISurface surface = serviceProvider.GetService<ISurface>();
 
-                surface.SurfaceBuilder(surfaceSizeProperty.Width, surfaceSizeProperty.Height);
+                surface.SurfaceBuilder(surfaceSize.Width, surfaceSize.Height);
 
                 for (int i = 0; i < Settings.HowManyRoverWillResearch; i++)
                 {
@@ -54,13 +54,13 @@ namespace MarsRoverControl
             bool roverCreatedSuccessfully = false;
             do
             {
-                //For definition the first rover vehicle, asking location and direction in the surface.
-                VehiclePositionProperty vehiclePositionPropertyForRover = InputManagerService.GetRoverDefinition();
+                //For definition the rover vehicle, asking location and direction in the surface.
+                VehiclePosition vehiclePositionForRover = InputManagerService.GetRoverDefinition();
 
                 //rover building
-                RoverVehicle rover = new RoverVehicle(vehiclePositionPropertyForRover.Location.X,
-                    vehiclePositionPropertyForRover.Location.Y,
-                    vehiclePositionPropertyForRover.VehicleDirection, surface);
+                RoverVehicle rover = new RoverVehicle(vehiclePositionForRover.Location.X,
+                    vehiclePositionForRover.Location.Y,
+                    vehiclePositionForRover.VehicleDirection, surface);
 
                 if (rover.IsActive)
                 {
@@ -78,7 +78,7 @@ namespace MarsRoverControl
         /// <param name="rover"></param>
         private static void DoCommandOperationsForRover(RoverVehicle rover)
         {
-            bool firstRoverMovedSuccessfully = false;
+            bool roverMovedSuccessfully = false;
             do
             {
                 //To move the rover, the user is prompted to enter commands
@@ -89,7 +89,7 @@ namespace MarsRoverControl
 
                 if (commandResultForRover.Success)
                 {
-                    firstRoverMovedSuccessfully = true;
+                    roverMovedSuccessfully = true;
                     Console.WriteLine(
                         Messages.RoverCommandsCompletedSuccessfullyMessage +
                         commandResultForRover.VehiclePosition.Location.X + " " +
@@ -103,7 +103,7 @@ namespace MarsRoverControl
                         commandResultForRover.VehiclePosition.Location.Y + " " + 
                         EnumerationHelper<Direction>.GetEnumItemName((int)commandResultForRover.VehiclePosition.VehicleDirection));
                 }
-            } while (firstRoverMovedSuccessfully == false);
+            } while (roverMovedSuccessfully == false);
         }
     }
 

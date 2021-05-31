@@ -8,11 +8,11 @@ namespace MarsRoverControl.Interfaces
 {
     public interface IRoverVehicle
     {
-        CommandResult TurnLeft(VehiclePositionProperty vehiclePositionProperty);
-        CommandResult TurnRight(VehiclePositionProperty vehiclePositionProperty);
-        CommandResult MoveForward(Guid roverId, VehiclePositionProperty vehiclePositionProperty);
+        CommandResult TurnLeft(VehiclePosition vehiclePosition);
+        CommandResult TurnRight(VehiclePosition vehiclePosition);
+        CommandResult MoveForward(Guid roverId, VehiclePosition vehiclePosition);
         string GetRoverPositionOnSurface();
-        CommandResult SimulationForTheCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList);
-        CommandResult RunCommands(Guid roverId, VehiclePositionProperty vehiclePositionProperty, List<char> commandList);
+        CommandResult SimulationForTheCommands(Guid roverId, VehiclePosition vehiclePosition, List<char> commandList);
+        CommandResult RunCommands(Guid roverId, VehiclePosition vehiclePosition, List<char> commandList);
     }
 }
